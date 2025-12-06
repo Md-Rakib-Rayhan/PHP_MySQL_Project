@@ -1,0 +1,214 @@
+////////////////////////////////////////////////////
+// USERS (normal users + professionals)
+////////////////////////////////////////////////////
+
+Table users {
+  id                int [pk, increment]
+  name              varchar
+  email             varchar [unique]
+  password          varchar
+  phone             varchar
+  profile_image     varchar
+  created_at        datetime
+  updated_at        datetime
+}
+
+////////////////////////////////////////////////////
+// ADMINS (separate for security)
+////////////////////////////////////////////////////
+
+Table admins {
+  id                int [pk, increment]
+  name              varchar
+  email             varchar [unique]
+  password          varchar
+  role              enum('super_admin','moderator')
+  created_at        datetime
+  updated_at        datetime
+}
+
+////////////////////////////////////////////////////
+// PROFESSIONALS
+////////////////////////////////////////////////////
+
+Table professionals {
+  id                int [pk, increment]
+  user_id           int [ref: > users.id]
+  profile_picture   varchar
+  bio               text
+  experience_years  int
+  address           varchar
+  city              varchar
+  state             varchar
+  country           varchar
+  is_verified       boolean
+  created_at        datetime
+  updated_at        datetime
+}
+
+////////////////////////////////////////////////////
+// PORTFOLIO IMAGES (previous tasks / completed work)
+////////////////////////////////////////////////////
+
+Table professional_projects {
+  id                int [pk, increment]
+  professional_id   int [ref: > professionals.id]
+  project_title     varchar
+  description       text
+  image_url         varchar
+  completed_date    date
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// SERVICES & PRICING
+////////////////////////////////////////////////////
+
+Table services {
+  id                int [pk, increment]
+  professional_id   int [ref: > professionals.id]
+  service_name      varchar
+  room_type         varchar
+  base_price        decimal
+  description       text
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// AVAILABILITY & APPOINTMENTS
+////////////////////////////////////////////////////
+
+Table availability {
+  id                int [pk, increment]
+  professional_id   int [ref: > professionals.id]
+  available_date    date
+  start_time        time
+  end_time          time
+}
+
+Table appointments {
+  id                int [pk, increment]
+  user_id           int [ref: > users.id]
+  professional_id   int [ref: > professionals.id]
+  appointment_date  date
+  start_time        time
+  end_time          time
+  status            enum('pending','approved','rejected','completed','cancelled')
+  notes             text
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// REVIEWS & REPORTS
+////////////////////////////////////////////////////
+
+Table reviews {
+  id                int [pk, increment]
+  user_id           int [ref: > users.id]
+  professional_id   int [ref: > professionals.id]
+  rating            int
+  review_text       text
+  created_at        datetime
+}
+
+Table review_reports {
+  id                int [pk, increment]
+  review_id         int [ref: > reviews.id]
+  reported_by       int [ref: > users.id]
+  reason            text
+  status            enum('pending','reviewed','dismissed')
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// QUOTE REQUESTS
+////////////////////////////////////////////////////
+
+Table quote_requests {
+  id                int [pk, increment]
+  user_id           int [ref: > users.id]
+  professional_id   int [ref: > professionals.id]
+  room_type         varchar
+  description       text
+  estimated_budget  decimal
+  status            enum('pending','responded','closed')
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// MESSAGING SYSTEM
+////////////////////////////////////////////////////
+
+Table messages {
+  id                int [pk, increment]
+  sender_id         int [ref: > users.id]
+  receiver_id       int [ref: > users.id]
+  message_text      text
+  is_read           boolean
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// NOTIFICATIONS
+////////////////////////////////////////////////////
+
+Table notifications {
+  id                int [pk, increment]
+  user_id           int [ref: > users.id]
+  message           varchar
+  type              varchar
+  is_read           boolean
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// BLOG
+////////////////////////////////////////////////////
+
+Table blog_posts {
+  id                int [pk, increment]
+  admin_id          int [ref: > admins.id]
+  title             varchar
+  content           text
+  image_url         varchar
+  created_at        datetime
+}
+
+Table blog_comments {
+  id                int [pk, increment]
+  post_id           int [ref: > blog_posts.id]
+  user_id           int [ref: > users.id]
+  comment_text      text
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// PROFESSIONAL REPORTS
+////////////////////////////////////////////////////
+
+Table professional_reports {
+  id                int [pk, increment]
+  professional_id   int [ref: > professionals.id]
+  reported_by       int [ref: > users.id]
+  reason            text
+  status            enum('pending','reviewed','dismissed')
+  created_at        datetime
+}
+
+////////////////////////////////////////////////////
+// ADMIN ACTIVITY LOGS
+////////////////////////////////////////////////////
+
+Table activity_logs {
+  id                int [pk, increment]
+  admin_id          int [ref: > admins.id]
+  action            varchar
+  description       text
+  created_at        datetime
+}
+
+
+
+Ref: "quote_requests"."id" < "quote_requests"."description"
+
+Ref: "messages"."id" < "messages"."is_read"
