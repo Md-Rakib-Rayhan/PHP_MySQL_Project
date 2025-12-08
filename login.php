@@ -56,6 +56,60 @@ $mydb = new mysqli("localhost","root","","decora");
 
   <body>
 
+
+  <?php
+
+if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']!=""){
+
+  $name_email = $_POST['email_username'];
+  $pass = $_POST['password'];
+  $spass = md5($pass);
+
+  $sql = "SELECT * FROM `users` WHERE `password` = '$spass' AND `name`= '$name_email' OR `email`='$name_email';";
+  $result = $mydb->query($sql);
+  
+  if($result->num_rows > 0){
+    header("Location: index.php?status=success");
+  }else{
+
+    echo '<script>
+    window.onload = function() {
+      mistake = "<strong>Hey! </strong>You Put Wrong Username or Password!";
+      notify = document.getElementById("wronginput");
+      notify.innerHTML = mistake;
+
+      notify.style.display = "block";
+      setTimeout(function() {
+                notify.style.display = "none";
+      }, 5000)
+    }
+    </script>';
+
+    // onload event occurs when an object has been loaded
+    // javascript agei load hoye jassilo, getElementById kaj korsilo na tai onload use kora
+  }
+
+
+
+
+}elseif(isset($_POST['submit'])){
+  echo '
+  <script>
+    window.onload = function() {
+      mistake = "<strong>Hey! </strong>Don\'t put empty!";
+      notify = document.getElementById("wronginput");
+      notify.innerHTML = mistake;
+
+      notify.style.display = "block";
+      setTimeout(function() {
+                notify.style.display = "none";
+      }, 5000)
+    }
+  </script>
+  ';
+}
+?>
+
     <!-- Content -->
 
     <div class="container-xxl">
@@ -185,53 +239,6 @@ $mydb = new mysqli("localhost","root","","decora");
 
 <!-- Form End -->
 
-<?php
-
-if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']!=""){
-
-  $name_email = $_POST['email_username'];
-  $pass = $_POST['password'];
-  $spass = md5($pass);
-
-  $sql = "SELECT * FROM `users` WHERE `password` = '$spass' AND `name`= '$name_email' OR `email`='$name_email';";
-  $result = $mydb->query($sql);
-  
-  if($result->num_rows > 0){
-    echo "Congratulation! You haved Logged in";
-  }else{
-
-    echo '<script>
-    mistake = "<strong>Hey! </strong>You Put Wrong Username or Password!";
-    notify = document.getElementById("wronginput");
-    notify.innerHTML = mistake;
-
-    notify.style.display = "block";
-    setTimeout(function() {
-              notify.style.display = "none";
-    }, 5000)
-    </script>';
-  }
-
-
-
-
-
-
-}elseif(isset($_POST['submit'])){
-  echo '
-  <script>
-    mistake = "<strong>Hey! </strong>Don\'t put empty!";
-    notify = document.getElementById("wronginput");
-    notify.innerHTML = mistake;
-
-    notify.style.display = "block";
-    setTimeout(function() {
-              notify.style.display = "none";
-    }, 5000)
-    </script>
-  ';
-}
-?>
 
 
               <p class="text-center">

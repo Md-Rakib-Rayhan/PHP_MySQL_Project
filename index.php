@@ -32,6 +32,40 @@
 </head>
 
 <body>
+    <!-- From Registration.php / Login.php -->
+     <!-- https://sweetalert2.github.io/ -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <?php
+     if(isset($_GET["status"])){
+        if($_GET["status"]=="created"){
+            echo '
+        <script>
+            Swal.fire({
+            title: "Your Welcome",
+            text: "Successfully Registered",
+            icon: "success",
+            timer: 3000, 
+            showConfirmButton: false
+            });
+        </script>
+        ';
+        }
+        elseif($_GET["status"]=="success"){
+            echo '
+        <script>
+            Swal.fire({
+            title: "Your Welcome",
+            text: "Account Login Successfull",
+            icon: "success",
+            timer: 3000, 
+            showConfirmButton: false
+            });
+        </script>
+        ';
+        }
+     }
+     ?>
+
     <!-- Spinner Start -->
     <div id="spinner"
         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -40,6 +74,7 @@
         </div>
     </div>
     <!-- Spinner End -->
+
 
 
     <!-- Navbar Start -->

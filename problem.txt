@@ -4,5 +4,3 @@ I face some new think today
 2. If i do not put any validation email on my code(html/php) and also i set it's type varchar on database but database still give error if email is not valid
 
 
-
-Warning: Cannot modify header information - headers already sent by (output started at D:\xampp\htdocs\All-Class-Files\php_mysql_project\register.php:4) in D:\xampp\htdocs\All-Class-Files\php_mysql_project\register.php on line 202

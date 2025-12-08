@@ -56,11 +56,46 @@ $mydb = new mysqli("localhost","root","","decora");
   </head>
 
   <body>
+
+  <?php
+
+    if(isset($_POST['submit']) && $_POST['username']!="" && $_POST['email']!="" && $_POST['password']!="" && isset($_POST['terms'])){
+
+      $name = $_POST['username'];
+      $email = $_POST['email'];
+      $pass = $_POST['password'];
+      $spass = md5($pass);
+
+      $sql = "INSERT INTO users VALUES (NULL, '$name', '$email', '$spass')";
+      $mydb->query($sql);
+      $mydb ->close();
+      header("Location: index.php?status=created");
+
+    }elseif(isset($_POST['submit'])){
+      echo '
+      <script>
+        window.onload = function() {
+          mistake = "<strong>Hey! </strong>Don\'t Left Empty & Agree Our Policy to Move Forward!";
+          notify = document.getElementById("wronginput");
+          notify.innerHTML = mistake;
+
+          notify.style.display = "block";
+          setTimeout(function() {
+                    notify.style.display = "none";
+          }, 5000)
+        }
+      </script>
+      ';
+    }
+
+  ?>
+
     <!-- Content -->
 
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
+          
 
 <!-- Wrong Input -->
           <div class="alert alert-danger" id="wronginput" style="display:none;">
@@ -186,38 +221,6 @@ $mydb = new mysqli("localhost","root","","decora");
               </form>
 <!-- Form tag end -->
 
-<?php
-
-  if(isset($_POST['submit']) && $_POST['username']!="" && $_POST['email']!="" && $_POST['password']!="" && isset($_POST['terms'])){
-
-
-    $name = $_POST['username'];
-    $email = $_POST['email'];
-    $pass = $_POST['password'];
-    $spass = md5($pass);
-
-    // $sql = "INSERT INTO users VALUES (NULL, '$name', '$email', '$spass')";
-    // $mydb->query($sql);
-    // $mydb ->close();
-    header("Location: index.php");
-
-    
-  }elseif(isset($_POST['submit'])){
-    echo '
-    <script>
-      mistake = "<strong>Hey! </strong>Don\'t Left Empty & Agree Our Policy to Move Forward!";
-      notify = document.getElementById("wronginput");
-      notify.innerHTML = mistake;
-
-      notify.style.display = "block";
-      setTimeout(function() {
-                notify.style.display = "none";
-      }, 5000)
-    </script>
-    ';
-  }
-
-?>
 
 
 
