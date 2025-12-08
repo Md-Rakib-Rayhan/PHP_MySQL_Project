@@ -1,1 +1,1 @@
-https://sweetalert2.github.io/
+https://sweetalert2.github.io/      -> user alternate of alert

@@ -65,10 +65,17 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
   $pass = $_POST['password'];
   $spass = md5($pass);
 
-  $sql = "SELECT * FROM `users` WHERE `password` = '$spass' AND `name`= '$name_email' OR `email`='$name_email';";
+  $sql = "SELECT * FROM `users` WHERE `password` = '$spass' AND (`name`= '$name_email' OR `email`='$name_email')";
   $result = $mydb->query($sql);
+  $userdata = $result->fetch_assoc() ;
+  // echo $userdata['name'];
   
   if($result->num_rows > 0){
+    session_start();
+    $_SESSION["isvalid"] = true;
+    $_SESSION["name"] = $userdata['name'];
+    $_SESSION["email"] = $userdata['email'];
+
     header("Location: index.php?status=success");
   }else{
 
