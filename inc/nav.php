@@ -36,12 +36,15 @@
                         <?php
                         }else{
                         ?>
-                        
+
 
                         
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                <img src="admin/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                                <img src="admin/assets/img/avatars/1.png" alt="Profile" 
+                
+                 width="35" height="35"
+                   class="w-px-35 h-auto rounded-circle" />
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -94,11 +97,43 @@
                                 </a>
                                 </li>
                             </ul>
+
+                           
                 
 
                         <?php
                         }
-                        ?>
+                        ?> 
+
+                        <!-- <?php
+//if (!isset($_SESSION["isvalid"])) {
+?>
+    <a href="login.php" class="nav-item nav-link d-flex align-items-center">
+        <button class="btn btn-outline-success me-2" type="button">Log in</button>
+    </a>
+<?php
+//} else {
+?>
+  
+    <div class="nav-item dropdown d-flex align-items-center ms-3">
+        <a href="#" class="d-flex align-items-center nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <img src="image.png" 
+                 alt="Profile" 
+                 class="rounded-circle" 
+                 width="35" height="35"
+                 style="object-fit: cover;">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+            <li><a class="dropdown-item" href="settings.php">Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
+        </ul>
+    </div>
+<?php
+//}
+?> -->
+
                         
                         
                     </div>
