@@ -36,8 +36,8 @@ function srcGlob(...src) {
 // Tasks
 // -------------------------------------------------------------------------------
 
-const buildTasks = require('./tasks/build')(conf, srcGlob);
-const prodTasks = require('./tasks/prod')(conf);
+const buildTasks = require('../tasks/build')(conf, srcGlob);
+const prodTasks = require('../tasks/prod')(conf);
 
 // Clean build directory
 // -------------------------------------------------------------------------------
