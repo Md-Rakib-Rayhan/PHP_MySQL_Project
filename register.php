@@ -64,10 +64,12 @@ $mydb = new mysqli("localhost","root","","decora");
       $name = $_POST['username'];
       $email = $_POST['email'];
       $pass = $_POST['password'];
-      $spass = md5($pass);
+      $hash = md5($pass);
 
-      $sql = "INSERT INTO users VALUES (NULL, '$name', '$email', '$spass')";
+      
+      $sql = "INSERT INTO user (name, email, password) VALUES ('$name', '$email', '$hash')";
       $mydb->query($sql);
+
       $mydb ->close();
       header("Location: index.php?status=created");
 

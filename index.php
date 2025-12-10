@@ -37,6 +37,16 @@ if (!isset($_SESSION["isvalid"])){
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+     <!-- my links -->
+     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"> -->
+      <style>
+        .my_profile_dropdown .dropdown-item:hover {
+            background-color: #e9ecef !important; /* light gray */
+            color: inherit !important; /* keeps text color unchanged */
+        }
+
+
+      </style>
 </head>
 
 <body>

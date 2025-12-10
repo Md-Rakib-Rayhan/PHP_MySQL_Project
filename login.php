@@ -63,14 +63,19 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
 
   $name_email = $_POST['email_username'];
   $pass = $_POST['password'];
-  $spass = md5($pass);
+  $hash = md5($pass);
 
-  $sql = "SELECT * FROM `users` WHERE `password` = '$spass' AND (`name`= '$name_email' OR `email`='$name_email')";
+  $sql = "SELECT * FROM `user` WHERE `password` = '$hash' AND (`name`= '$name_email' OR `email`='$name_email')";
   $result = $mydb->query($sql);
   $userdata = $result->fetch_assoc() ;
   // echo $userdata['name'];
   
   if($result->num_rows > 0){
+
+    $id = $userdata['id'];
+    $update_sql = "UPDATE user SET last_login = NOW() WHERE id = $id";
+    $mydb->query($update_sql);
+
     session_start();
     $_SESSION["isvalid"] = true;
     $_SESSION["name"] = $userdata['name'];
