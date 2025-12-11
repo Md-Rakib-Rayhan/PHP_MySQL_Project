@@ -54,6 +54,11 @@ if ($result->num_rows > 0) {
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <style>
+        .form-control{
+           color: #0c0c0cff;
+        }
+    </style>
 </head>
 
 <body>
@@ -91,7 +96,7 @@ if ($result->num_rows > 0) {
 
 
             <div class=" card-body p-4">
-            <form>
+            <form method="post">
                 <div class="row g-5">
                 <!-- Column 1: Profile Image -->
                 <div class="col-md-3 d-flex flex-column align-items-center text-center">
@@ -106,19 +111,19 @@ if ($result->num_rows > 0) {
                 <div class="col-md-4">
                     <div class="mb-4">
                     <label class="form-label fw-semibold">First Name</label>
-                    <input type="text" class="form-control form-control-lg" placeholder="John" <?php if(isset($fname)){echo "value='$fname'";} ?>>
+                    <input type="text" name="fname" class="form-control form-control-lg" placeholder="ex: John" <?php if(isset($fname)){echo "value='$fname'";} ?>>
                     </div>
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Last Name</label>
-                    <input type="text" class="form-control form-control-lg" placeholder="Doe"<?php if(isset($lname)){echo "value='$lname'";} ?>>
+                    <input type="text" name="lname" class="form-control form-control-lg" placeholder="ex: Doe"<?php if(isset($lname)){echo "value='$lname'";} ?>>
                     </div>
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Email</label>
-                    <input type="email" class="form-control form-control-lg" placeholder="john.doe@example.com"<?php if(isset($email)){echo "value='$email'";} ?>>
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="ex: john.doe@example.com"<?php if(isset($email)){echo "value='$email'";} ?>>
                     </div>
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Phone</label>
-                    <input type="text" class="form-control form-control-lg" placeholder="658 799 8941"<?php if(isset($phone)){echo "value='$phone'";} ?>>
+                    <input type="text" name="phone" class="form-control form-control-lg" placeholder="ex: 658 799 8941"<?php if(isset($phone)){echo "value='$phone'";} ?>>
                     </div>
                 </div>
 
@@ -126,32 +131,62 @@ if ($result->num_rows > 0) {
                 <div class="col-md-5">
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Address</label>
-                    <input type="text" class="form-control form-control-lg" placeholder="123 Main St, City, Country"<?php if(isset($address)){echo "value='$address'";} ?>>
+                    <input type="text" name="address" class="form-control form-control-lg" placeholder="ex: 123 Main St, City, Country"<?php if(isset($address)){echo "value='$address'";} ?>>
                     </div>
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Company / Individual</label>
-                    <select class="form-select form-select-lg">
+                    <select name="company_individual" class="form-select form-select-lg">
                         <option value="individual">Individual</option>
                         <option value="company">Company</option>
                     </select>
                     </div>
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Profession</label>
-                    <input type="text" class="form-control form-control-lg" placeholder="Interior Designer"<?php if(isset($profession)){echo "value='$profession'";} ?>>
+                    <input type="text" name="profession" class="form-control form-control-lg" placeholder="ex: Business Person"<?php if(isset($profession)){echo "value='$profession'";} ?>>
                     </div>
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Birthday</label>
-                    <input type="date" class="form-control form-control-lg"<?php if(isset($dob)){echo "value='$dob'";} ?>>
+                    <input type="date" name="dob" class="form-control form-control-lg"<?php if(isset($dob)){echo "value='$dob'";} ?>>
                     </div>
                 </div>
                 </div>
 
                 <!-- Submit -->
                 <div class="mt-4 text-end">
-                <button type="submit" class="btn btn-primary btn-lg px-5">Update Profile</button>
+                <button name="submit" type="submit" class="btn btn-primary btn-lg px-5">Update Profile</button>
                 </div>
             </form>
             </div>
+
+
+
+            <?php
+
+                if(isset($_POST['submit'])){
+                    $fname = $_POST['fname'];
+                    $lname = $_POST['lname'];
+                    $email = $_POST['email'];
+                    $phone = $_POST['phone'];
+                    $address = $_POST['address'];
+                    $company_individual = $_POST['company_individual'];
+                    $profession = $_POST['profession'];
+                    $dob = $_POST['dob'];
+
+                    echo "
+                    $fname"."<br>"
+                    ."$fname"."<br>"
+                    ."$lname"."<br>"
+                    ."$email"."<br>"
+                    ."$phone"."<br>"
+                    ."$address"."<br>"
+                    ."$company_individual"."<br>"
+                    ."$profession"."<br>"
+                    ."$dob"."<br>"
+                    ;
+                }
+            
+            
+            ?>
 
 
 

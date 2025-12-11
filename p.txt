@@ -5,7 +5,7 @@ CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(150) NOT NULL UNIQUE,
-    pass VARCHAR(255) NOT NULL,         
+    password VARCHAR(255) NOT NULL,         
     profile_pic VARCHAR(255) NULL,     
     role ENUM('Admin','User') DEFAULT 'User',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -15,11 +15,11 @@ CREATE TABLE user (
 ALTER TABLE user ADD COLUMN last_login DATETIME NULL;
 
 ALTER TABLE user
-MODIFY COLUMN updated_date DATETIME DEFAULT CURRENT_TIMESTAMP;
+MODIFY COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP;
 
 
 
-UPDATE user SET name='newname', updated_date=NOW() WHERE id=...
+UPDATE user SET name='newname', updated_at=NOW() WHERE id=...
 
 
 
@@ -34,4 +34,5 @@ ADD COLUMN `address` VARCHAR(255) AFTER `phone`,
 ADD COLUMN `company_or_individual` ENUM('individual','company') DEFAULT 'individual' AFTER `address`,
 ADD COLUMN `profession` VARCHAR(100) AFTER `company_or_individual`,
 ADD COLUMN `birthday` DATE AFTER `profession`;
+
 SELECT * FROM `user` WHERE 1
