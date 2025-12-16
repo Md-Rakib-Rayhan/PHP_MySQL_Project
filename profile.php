@@ -1,12 +1,24 @@
 <?php
-$mydb = new mysqli("localhost","root","","decora");
 session_start();
-$name = $_SESSION['name'];
+if (!isset($_SESSION["isvalid"])){
+    header("Location: login.php");
+}
+?>
 
+<?php
+$mydb = new mysqli("localhost","root","","decora");
+$name = $_SESSION['name'];
+?>
+
+<!-- Get Data -->
+<?php
 $sql = "SELECT * FROM user WHERE `name`='$name'";
 $result = $mydb->query($sql);
+
 if ($result->num_rows > 0) {
+
     $row = $result->fetch_assoc();
+    
     $name = $row["name"];
     $fname = $row["first_name"];
     $lname = $row["last_name"];
@@ -18,6 +30,97 @@ if ($result->num_rows > 0) {
     $dob = $row["birthday"];
     $pic = $row["profile_pic"];
 }
+?>
+
+<!-- Sent Data -->
+<?php
+// profile_pic
+// fname
+// lname
+// email
+// phone
+// address
+// company_individual
+// profession
+// dob
+
+if(isset($_POST["submit"])){
+    
+
+    $fname = $_POST["fname"];
+    $lname = $_POST["lname"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $address = $_POST["address"];
+    $company_or_individual = $_POST["company_individual"];
+    $profession = $_POST["profession"];
+    $dob = $_POST["dob"];
+
+    // photo
+    if($_FILES["profile_pic"]["name"]!=""){
+        $photo_name = $_FILES["profile_pic"]["name"];
+        $tmp_name = $_FILES["profile_pic"]["tmp_name"];
+        $upload_path = "img/users/";
+        $full_path = $upload_path . $photo_name; // for sql
+
+        // move the photo from temp server
+        move_uploaded_file($tmp_name, "img/users/". $photo_name);
+
+        $pic_sql = ", `profile_pic`='$full_path'";
+    }else{
+        $pic_sql = "";
+    }
+
+    
+
+
+    $sql_update = "UPDATE `user` SET `first_name`='$fname',`last_name`='$lname',`email`='$email',`phone`='$phone',`address`='$address',`company_or_individual`='$company_or_individual',`profession`='$profession',`birthday`='$dob' $pic_sql WHERE `name`='$name'";
+
+    $updated = $mydb->query($sql_update);
+
+    if($mydb->affected_rows){
+        if(isset($full_path) && $full_path != ""){
+            $_SESSION["pic"] = $full_path;
+        }
+        header("Location: profile.php?status=updated");
+    }else{
+        echo '
+        <script>
+            window.onload = function() {
+            problem = "<strong>Their Was Problem Occur! <br> Or may you changed noting";
+            notify = document.getElementById("wronginput");
+            notify.classList.add("alert-danger");
+            notify.innerHTML = problem;
+
+            notify.style.display = "block";
+            setTimeout(function() {
+                        notify.style.display = "none";
+            }, 5000)
+            }
+        </script>
+        ';
+    }
+}
+
+if(isset($_GET['status'])){
+    echo '
+        <script>
+            window.onload = function() {
+            updated = "<strong>Updated currectly";
+            notify = document.getElementById("wronginput");
+            notify.classList.add("alert-success");
+            notify.innerHTML = updated;
+
+            notify.style.display = "block";
+            setTimeout(function() {
+                        notify.style.display = "none";
+            }, 5000)
+            }
+        </script>';
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +188,8 @@ if ($result->num_rows > 0) {
     <!-- Contact Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
+            <div class="alert text-center" id="wronginput" style="display:none;">
+            </div>
             <div class="text-center wow fadeIn" data-wow-delay="0.1s">
                 <h1 class="mb-5">Edit Profile <span class="text-uppercase text-primary bg-light px-2"><?php echo $_SESSION["name"]; ?></span></h1>
             </div>
@@ -96,13 +201,13 @@ if ($result->num_rows > 0) {
 
 
             <div class=" card-body p-4">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <div class="row g-5">
                 <!-- Column 1: Profile Image -->
                 <div class="col-md-3 d-flex flex-column align-items-center text-center">
-                    <img src="img/no_profile.jpg" alt="Profile" id="profilePreview"
+                    <img src="<?php if(isset($pic)){echo "$pic";}else{echo "img/no_profile.jpg";}?>" alt="Profile" id="profilePreview"
                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
-                    <input type="file" class="form-control mt-3" accept="image/*"
+                    <input type="file" name="profile_pic" class="form-control mt-3" accept="image/*"
                         onchange="document.getElementById('profilePreview').src = window.URL.createObjectURL(this.files[0])">
                     <small class="text-muted mt-1">Change Photo</small>
                 </div>
@@ -136,8 +241,16 @@ if ($result->num_rows > 0) {
                     <div class="mb-4">
                     <label class="form-label fw-semibold">Company / Individual</label>
                     <select name="company_individual" class="form-select form-select-lg">
-                        <option value="individual">Individual</option>
-                        <option value="company">Company</option>
+                        <option value="individual"
+                            <?php if(isset($company_or_individual) && $company_or_individual == 'individual') echo 'selected'; ?>>
+                            Individual
+                        </option>
+
+                        <option value="company"
+                            <?php if(isset($company_or_individual) && $company_or_individual == 'company') echo 'selected'; ?>>
+                            Company
+                        </option>
+
                     </select>
                     </div>
                     <div class="mb-4">
@@ -160,33 +273,7 @@ if ($result->num_rows > 0) {
 
 
 
-            <?php
-
-                if(isset($_POST['submit'])){
-                    $fname = $_POST['fname'];
-                    $lname = $_POST['lname'];
-                    $email = $_POST['email'];
-                    $phone = $_POST['phone'];
-                    $address = $_POST['address'];
-                    $company_individual = $_POST['company_individual'];
-                    $profession = $_POST['profession'];
-                    $dob = $_POST['dob'];
-
-                    echo "
-                    $fname"."<br>"
-                    ."$fname"."<br>"
-                    ."$lname"."<br>"
-                    ."$email"."<br>"
-                    ."$phone"."<br>"
-                    ."$address"."<br>"
-                    ."$company_individual"."<br>"
-                    ."$profession"."<br>"
-                    ."$dob"."<br>"
-                    ;
-                }
-            
-            
-            ?>
+           
 
 
 

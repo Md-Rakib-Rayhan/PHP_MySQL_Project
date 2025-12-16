@@ -1,4 +1,5 @@
 <?php
+// Connect to the database
 $mydb = new mysqli("localhost","root","","decora");
 ?>
 

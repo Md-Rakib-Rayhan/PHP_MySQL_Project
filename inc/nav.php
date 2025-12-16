@@ -20,13 +20,13 @@
                     </a>
                 <?php } else { ?>
                     <a class="nav-link" href="#" data-bs-toggle="dropdown">
-                        <img src="img/no_profile.jpg" width="36" height="36" class="rounded-circle">
+                        <img src="<?php if(isset($_SESSION["pic"])){echo $_SESSION["pic"];}else{echo 'img/no_profile.jpg';} ?>" width="36" height="36" class="rounded-circle">
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end shadow p-3 my_profile_dropdown" style="width:260px; border-radius:12px;">
                         <li class="mb-3">
                             <div class="d-flex align-items-center">
-                                <img src="img/no_profile.jpg" width="48" height="48" class="rounded-circle me-3">
+                                <img src="<?php if(isset($_SESSION["pic"])){echo $_SESSION["pic"];}else{echo 'img/no_profile.jpg';} ?>" width="48" height="48" class="rounded-circle me-3">
                                 <div>
                                     <strong class="d-block"><?php echo $_SESSION["name"]; ?></strong>
                                     <small class="text-muted">User</small>
@@ -58,7 +58,7 @@
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center py-2" href="auth-login-basic.html">
+                            <a class="dropdown-item d-flex align-items-center py-2" href="logout.php">
                                 <i class="bi bi-power text-danger me-3 fs-5"></i> Log Out
                             </a>
                         </li>
@@ -101,7 +101,7 @@
 
                     <div class="nav-item dropdown">
                         <a class="nav-link d-flex align-items-center" href="#" data-bs-toggle="dropdown">
-                            <img src="img/no_profile.jpg" width="38" height="38" class="rounded-circle me-2">
+                            <img src="<?php if(isset($_SESSION["pic"])){echo $_SESSION["pic"];}else{echo 'img/no_profile.jpg';} ?>" width="38" height="38" class="rounded-circle me-2">
                             <span class="fw-semibold"><?php echo $_SESSION["name"]; ?></span>
                         </a>
 
@@ -109,7 +109,7 @@
 
                             <li class="mb-3">
                                 <div class="d-flex align-items-center">
-                                    <img src="img/no_profile.jpg" width="48" height="48" class="rounded-circle me-3">
+                                    <img src="<?php if(isset($_SESSION["pic"])){echo $_SESSION["pic"];}else{echo 'img/no_profile.jpg';} ?>" width="48" height="48" class="rounded-circle me-3">
                                     <div>
                                         <strong class="d-block"><?php echo $_SESSION["name"]; ?></strong>
                                         <small class="text-muted">User</small>
@@ -141,7 +141,7 @@
                             <li><hr class="dropdown-divider"></li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="auth-login-basic.html">
+                                <a class="dropdown-item d-flex align-items-center py-2" href="logout.php">
                                     <i class="bi bi-power text-danger me-3 fs-5"></i> Log Out
                                 </a>
                             </li>

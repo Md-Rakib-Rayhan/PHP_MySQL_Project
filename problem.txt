@@ -4,4 +4,4 @@ I face some new think today
 2. If i do not put any validation email on my code(html/php) and also i set it's type varchar on database but database still give error if email is not valid
 
 
-learn https://summernote.org/
+text editing dasboard https://summernote.org/

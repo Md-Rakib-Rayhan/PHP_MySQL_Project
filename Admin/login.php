@@ -2,13 +2,14 @@
 // Connect to the database
 $mydb = new mysqli("localhost","root","","decora");
 ?>
+
 <!DOCTYPE html>
 <html
   lang="en"
   class="light-style customizer-hide"
   dir="ltr"
   data-theme="theme-default"
-  data-assets-path="admin/assets/"
+  data-assets-path="assets/"
   data-template="vertical-menu-template-free"
 >
   <head>
@@ -18,12 +19,12 @@ $mydb = new mysqli("localhost","root","","decora");
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login</title>
+    <title>Login Admin</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="admin/assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.ico" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,25 +35,25 @@ $mydb = new mysqli("localhost","root","","decora");
     />
 
     <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="admin/assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="admin/assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="admin/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="admin/assets/css/demo.css" />
+    <link rel="stylesheet" href="assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
     <!-- Page CSS -->
     <!-- Page -->
-    <link rel="stylesheet" href="admin/assets/vendor/css/pages/page-auth.css" />
+    <link rel="stylesheet" href="assets/vendor/css/pages/page-auth.css" />
     <!-- Helpers -->
-    <script src="admin/assets/vendor/js/helpers.js"></script>
+    <script src="assets/vendor/js/helpers.js"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="admin/assets/js/config.js"></script>
+    <script src="assets/js/config.js"></script>
   </head>
 
   <body>
@@ -66,10 +67,10 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
   $pass = $_POST['password'];
   $hash = md5($pass);
 
-  $sql = "SELECT * FROM `user` WHERE `password` = '$hash' AND (`name`= '$name_email' OR `email`='$name_email')";
+  $sql = "SELECT * FROM `user` WHERE `password` = '$hash' AND `role` = 'Admin' AND (`name`= '$name_email' OR `email`='$name_email')";
   $result = $mydb->query($sql);
   $userdata = $result->fetch_assoc() ;
-  // echo $userdata['name'];
+
   
   // if true
   if($result->num_rows > 0){ 
@@ -82,15 +83,15 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
 
     // Store Login info to client browser / stay login
     session_start();
-    $_SESSION["isvalid"] = true;
+    $_SESSION["isValidAdmin"] = true;
     $_SESSION["name"] = $userdata['name'];
     $_SESSION["email"] = $userdata['email'];
     if(isset($userdata["profile_pic"])){
       $_SESSION["pic"] = $userdata["profile_pic"];
     }
 
-    // Move to Home Page
-    header("Location: index.php?status=success");
+    // Move to Admin Page
+    header("Location: index.php");
   }else{
 
     echo '<script>
@@ -281,18 +282,18 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
-    <script src="admin/assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="admin/assets/vendor/libs/popper/popper.js"></script>
-    <script src="admin/assets/vendor/js/bootstrap.js"></script>
-    <script src="admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="assets/vendor/libs/popper/popper.js"></script>
+    <script src="assets/vendor/js/bootstrap.js"></script>
+    <script src="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-    <script src="admin/assets/vendor/js/menu.js"></script>
+    <script src="assets/vendor/js/menu.js"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
 
     <!-- Main JS -->
-    <script src="admin/assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script>
 
     <!-- Page JS -->
 

@@ -1,6 +1,8 @@
+<?php $page = basename($_SERVER['PHP_SELF']); ?>
+
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-            <a href="index.html" class="app-brand-link">
+            <a href="index.php" class="app-brand-link">
               <span class="app-brand-logo demo">
                 <svg
                   width="25"
@@ -68,8 +70,8 @@
 
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
-            <li class="menu-item active">
-              <a href="index.html" class="menu-link">
+            <li class="menu-item <?php ($page == 'index.php') ? 'active' : '' ?>">
+              <a href="index.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
@@ -80,20 +82,20 @@
             <li class="menu-header small text-uppercase">
               <span class="menu-header-text">Pages</span>
             </li>
-            <li class="menu-item">
+            <li class="menu-item <?= ($page == 'account.php' || $page == 'account_list.php') ? 'active open' : '' ?>">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Account Settings">Account Settings</div>
               </a>
               <ul class="menu-sub">
-                <li class="menu-item">
-                  <a href="pages-account-settings-account.html" class="menu-link">
+                <li class="menu-item" <?= ($page == 'account.php') ? 'active' : '' ?>>
+                  <a href="account.php" class="menu-link">
                     <div data-i18n="Account">Account</div>
                   </a>
                 </li>
-                <li class="menu-item">
-                  <a href="pages-account-settings-notifications.html" class="menu-link">
-                    <div data-i18n="Notifications">Notifications</div>
+                <li class="menu-item" <?= ($page == 'account_list.php') ? 'active' : '' ?>>
+                  <a href="account_list.php" class="menu-link">
+                    <div data-i18n="Notifications">List of Account</div>
                   </a>
                 </li>
                 <li class="menu-item">

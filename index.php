@@ -1,10 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION["isvalid"])){
-    header("Location: login.php");
-}
-
-
 ?>
 
 <!DOCTYPE html>

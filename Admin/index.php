@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION["isValidAdmin"])){
+    header("Location: login.php");
+}
+?>
+
 <!DOCTYPE html>
 
 <html
@@ -54,14 +61,15 @@
   </head>
 
   <body>
+    
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
-        <!-- Menu -->
+<!-- Menu -->
 <?php
   include("inc/menu_left.php");
 ?>
-        <!-- / Menu -->
+<!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
