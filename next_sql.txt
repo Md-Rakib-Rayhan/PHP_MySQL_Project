@@ -1,0 +1,90 @@
+-- Create Services Table
+CREATE TABLE services (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_name VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  avg_price DECIMAL(10, 2),  -- Average price for the service (not fixed)
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Create Professionals Table (Reference to 'user' table)
+CREATE TABLE professionals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,  -- Reference to the 'user' table (assuming professionals are registered users)
+  name VARCHAR(255),
+  bio TEXT,
+  experience_years INT,  -- How many years of experience the professional has
+  is_verified BOOLEAN DEFAULT FALSE,  -- Whether the professional is verified or not
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES user(id)  -- Fix reference to 'user' table
+);
+
+-- Create Professional Services Table (Many-to-Many relationship between professionals and services)
+CREATE TABLE professional_services (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  professional_id INT,
+  service_id INT,
+  FOREIGN KEY (professional_id) REFERENCES professionals(id),
+  FOREIGN KEY (service_id) REFERENCES services(id)
+);
+
+-- Create Service Requests Table (To track service requests by clients)
+CREATE TABLE service_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,  -- The client making the request
+  service_id INT,  -- The service being requested
+  professional_id INT,  -- The professional chosen by the client (could be assigned later)
+  status ENUM('pending', 'in_progress', 'completed', 'cancelled') DEFAULT 'pending',
+  price DECIMAL(10, 2),  -- The agreed price for the service
+  start_date DATETIME,  -- The date the service starts
+  end_date DATETIME,  -- The date the service is expected to end
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (service_id) REFERENCES services(id),
+  FOREIGN KEY (professional_id) REFERENCES professionals(id)
+);
+
+-- Create Progress Updates Table (Track project progress)
+CREATE TABLE progress_updates (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_request_id INT,  -- The service request that this progress update belongs to
+  update_description TEXT,  -- Description of the progress update
+  update_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  price_update DECIMAL(10, 2),  -- If there's a price change, we store that here
+  FOREIGN KEY (service_request_id) REFERENCES service_requests(id)
+);
+
+-- Create Reports Table (For issues reported by clients)
+CREATE TABLE reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_request_id INT,  -- The project being reported
+  report_text TEXT,  -- The issue reported by the client
+  reported_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('pending', 'resolved', 'dismissed') DEFAULT 'pending',
+  FOREIGN KEY (service_request_id) REFERENCES service_requests(id)
+);
+
+-- Create Reviews Table (Clients can rate and review the professional)
+CREATE TABLE reviews (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_request_id INT,  -- The project being reviewed
+  rating INT,  -- Rating from 1 to 5
+  review_text TEXT,  -- Review comments from the client
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (service_request_id) REFERENCES service_requests(id)
+);
+
+-- Create Contact Requests Table (Clients can contact professionals directly)
+CREATE TABLE contact_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,  -- Client requesting to contact the professional
+  professional_id INT,  -- Professional being contacted
+  message TEXT,  -- Message from the client
+  contact_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('pending', 'resolved') DEFAULT 'pending',  -- Whether the request was responded to
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (professional_id) REFERENCES professionals(id)
+);

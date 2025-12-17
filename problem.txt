@@ -1,7 +1,4 @@
-I face some new think today
-1. if i set md5 encryption on my code(login) and if i also set it on database password then it's work
-	-> but the special think is if i don't put that encryption on database it's still ganna work
-2. If i do not put any validation email on my code(html/php) and also i set it's type varchar on database but database still give error if email is not valid
-
-
 text editing dasboard https://summernote.org/
+
+
+Same name problem not solved yet

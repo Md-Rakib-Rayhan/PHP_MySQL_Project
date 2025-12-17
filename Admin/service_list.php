@@ -140,84 +140,76 @@ $mydb = new mysqli("localhost","root","","decora");
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Account Settings /</span> Notifications
+                <span class="text-muted fw-light">Services
               </h4>
 
               <div class="row">
                 <div class="col-md-12">
                   <ul class="nav nav-pills flex-column flex-md-row mb-3">
                     <li class="nav-item">
-                      <a class="nav-link" href="account.php"
-                        ><i class="bx bx-user me-1"></i> Account</a
+                      <a class="nav-link" href="service.php"
+                        ><i class="bx bx-user me-1"></i> Add Service</a
                       >
                     </li>
                     <li class="nav-item">
                       <a class="nav-link active" href="javascript:void(0);"
-                        ><i class="bx bx-bell me-1"></i> List of Accounts</a
+                        ><i class="bx bx-bell me-1"></i> List of Service</a
                       >
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                       <a class="nav-link" href="pages-account-settings-connections.html"
                         ><i class="bx bx-link-alt me-1"></i> Connections</a
                       >
-                    </li>
+                    </li> -->
                   </ul>
                   <div class="card">
 
 
                     <!-- List of Accounts -->
-                    <h5 class="card-header">All Accounts</h5>
-
-                    <?php
-                    // Define roles array
-                    $accounts = ["Admin", "Professionals", "Client"]; 
-                    ?>
+                    <h5 class="card-header">Running Services</h5>
 
                     <div class="card-body">
-                        <?php 
-                        // Loop through each role and display data for each
-                        foreach ($accounts as $role) {
-                          if($role!="Admin"){echo "<br> <br>";}
-                        ?>
                             <br>
                             <div class="role-section">
 
                                 <!-- Display role title -->
-                                <h5 class="role-title" style="color:#000000; font-weight: 900;"><?php echo $role; ?> <hr></h5> 
+                                <h5 class="role-title" style="color:#000000; font-weight: 900;">All Services <hr></h5> 
                                 <div class="error"></div>
                                 
                                 <div class="table-responsive">
                                     <table class="table table-striped table-borderless border-bottom">
                                         <thead>
                                             <tr>
-                                                <th class="text-nowrap">UserId</th>
-                                                <th class="text-nowrap">Name</th>
-                                                <th class="text-nowrap">Email</th>
-                                                <th class="text-nowrap">Account Created</th>
-                                                <th class="text-nowrap">Last Login</th>
+                                                <th class="text-nowrap">Id</th>
+                                                <th class="text-nowrap">Service Name</th>
+                                                <th class="text-nowrap">Description</th>
+                                                <th class="text-nowrap">Price</th>
+                                                <th class="text-nowrap">Last Update</th>
                                                 <th class="text-nowrap text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         <?php
-                                        // Modify SQL query dynamically based on role
-                                        $sql_view_all = "SELECT * FROM user WHERE role = '$role'"; // Fetch user based on role
-                                        $row_data = $mydb->query($sql_view_all);
+
+                                        $sql = "SELECT * FROM services"; 
+                                        $row_data = $mydb->query($sql);
 
                                         while ($data = $row_data->fetch_object()) {
                                         ?>
 
                                             <tr>
                                                 <td class="text-nowrap"><?php echo "$data->id";?></td>
-                                                <td class="text-nowrap"><?php echo "$data->name";?></td>
-                                                <td class="text-nowrap"><?php echo "$data->email";?></td>
-                                                <td class="text-nowrap"><?php echo "$data->created_at";?></td>
-                                                <td class="text-nowrap"><?php echo "$data->last_login";?></td>
+                                                <td class="text-nowrap"><?php echo "$data->service_name";?></td>
+                                                <td style="max-width: 400px; word-wrap: break-word; white-space: normal;">
+                                                    <?php echo "$data->description";?>
+                                                </td>
+                                                <td class="text-nowrap"><?php echo "$data->avg_price";?></td>
+                                                <td class="text-nowrap"><?php echo "$data->updated_at";?></td>
 
                                                 
                                                 <td class="text-nowrap text-center">
                                                       <?php
-                                                      echo '<a href="account.php?action=edit&id=' . $data->id . '" class="btn btn-primary me-2">More</a>';
+                                                      echo '<a href="service.php?action=edit&id=' . $data->id . '" class="btn btn-primary me-2">Update</a>';
                                                       ?>
                                                 </td>
                                             </tr>
@@ -227,7 +219,7 @@ $mydb = new mysqli("localhost","root","","decora");
                                     </table>
                                 </div>
                             </div>
-                        <?php } ?>
+                        
                     </div>
 
 
@@ -238,7 +230,7 @@ $mydb = new mysqli("localhost","root","","decora");
                       <form action="javascript:void(0);">
                         <div class="row">
                           <div class="mt-4">
-                            <a href="account.php" class="btn btn-primary me-2">Add Member</a>
+                            <a href="service.php" class="btn btn-primary me-2">Add Member</a>
                           </div>
                         </div>
                       </form>

@@ -1,0 +1,33 @@
+@import url(//fonts.googleapis.com/css?family=Montserrat:300,400,500);
+.service-7 {
+  font-family: "Montserrat", sans-serif;
+	color: #8d97ad;
+  font-weight: 300;
+}
+
+.service-7 h1, .service-7 h2, .service-7 h3, .service-7 h4, .service-7 h5, .service-7 h6 {
+  color: #3e4555;
+}
+
+.service-7 .font-weight-medium {
+	font-weight: 500;
+}
+
+.service-7 a {
+	text-decoration: none;
+}
+
+.service-7 .linking {
+	color: #3e4555;
+}
+
+.service-7 .linking:hover {
+	color: #316ce8;
+}
+
+.service-7 .subtitle {
+    color: #8d97ad;
+    line-height: 24px;
+}
+
+ 

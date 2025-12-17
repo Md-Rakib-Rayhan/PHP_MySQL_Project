@@ -83,6 +83,7 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
     // Store Login info to client browser / stay login
     session_start();
     $_SESSION["isvalid"] = true;
+    $_SESSION["id"] = $userdata['id'];
     $_SESSION["name"] = $userdata['name'];
     $_SESSION["email"] = $userdata['email'];
     if(isset($userdata["profile_pic"])){

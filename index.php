@@ -32,6 +32,7 @@ session_start();
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/my_style.css" rel="stylesheet">
      <!-- my links -->
      <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"> -->
       <style>
@@ -156,6 +157,91 @@ session_start();
     <!-- Hero End -->
 
 
+
+
+<!-- Services -->
+ <div class="py-5 service-12">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <span class="badge badge-info rounded-pill px-3 py-1 font-weight-light">Our Specializations</span>
+                <h4 class="my-3">Expert Interior Design for Modern Living</h4>
+                <h6 class="font-weight-light subtitle">We transform ordinary rooms into extraordinary spaces. Whether it's a cozy home or a professional workspace, our designs balance aesthetics with daily functionality.</h6>
+                
+                <div class="row">
+                    <!-- Service 1 -->
+                    <div class="col-md-6 mt-3">
+                        <h6 class="font-weight-medium">Living Room Design</h6>
+                        <p>Creating elegant and comfortable social spaces for family and guests.</p>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="col-md-6 mt-3">
+                        <h6 class="font-weight-medium">Kitchen Makeover</h6>
+                        <p>Modern, efficient, and beautiful kitchen layouts tailored to your needs.</p>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="col-md-6 mt-3">
+                        <h6 class="font-weight-medium">Office Space Design</h6>
+                        <p>Professional environments designed to boost productivity and inspiration.</p>
+                    </div>
+                    <!-- Service 4 -->
+                    <div class="col-md-6 mt-3">
+                        <h6 class="font-weight-medium">Bathroom Remodeling</h6>
+                        <p>Turning bathrooms into luxurious, spa-like retreats with premium finishes.</p>
+                    </div>
+                    <!-- Service 5 -->
+                    <div class="col-md-6 mt-3">
+                        <h6 class="font-weight-medium">Bedroom Design</h6>
+                        <p>Personalized sanctuaries designed for ultimate rest and relaxation.</p>
+                    </div>
+                    <!-- Service 6 -->
+                    <div class="col-md-6 mt-3">
+                        <h6 class="font-weight-medium">Lighting Design</h6>
+                        <p>Enhancing ambiance and mood through strategic, artistic lighting solutions.</p>
+                    </div>
+
+                    <div class="col-lg-12 my-4">
+                        <a class="btn btn-info-gradiant btn-md border-0 text-white" href="service.php"><span>Explore All Services</span></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="row wrap-service12">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <!-- Image representing Living/Bedroom -->
+                            <div class="col-md-12 img-hover mb-4">
+                                <img src="img/services/living_room.jpg" class="rounded img-shadow img-fluid" alt="Living Room Design" />
+                            </div>
+                            <!-- Image representing Kitchen/Bath -->
+                            <div class="col-md-12 img-hover mb-4">
+                                <img src="img/services/light-blue-modern-kitchen.jpg" class="rounded img-shadow img-fluid" alt="Kitchen Makeover" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 uneven-box">
+                        <div class="row">
+                            <!-- Image representing Office -->
+                            <div class="col-md-12 img-hover mb-4">
+                                <img src="img/services/office.jpg" class="rounded img-shadow img-fluid" alt="Office Design" />
+                            </div>
+                            <!-- Image representing Lighting/Bedroom -->
+                            <div class="col-md-12 img-hover mb-4">
+                                <img src="img/services/Bathroom.jpg" class="rounded img-shadow img-fluid" alt="Bedroom Design" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Services -->
+
+
+
     <!-- About Start -->
     <div class="container-fluid py-5">
         <div class="container">
@@ -207,6 +293,7 @@ session_start();
         </div>
     </div>
     <!-- About End -->
+
 
 
     <!-- Feature Start -->
