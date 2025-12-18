@@ -111,7 +111,7 @@ $mydb = new mysqli("localhost","root","","decora");
                 </div>
                 <!-- Column -->
 
-                <?}?>
+                <?php }?>
 
                              
             </div>
