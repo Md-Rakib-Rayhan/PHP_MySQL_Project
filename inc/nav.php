@@ -1,3 +1,16 @@
+<?php
+
+$mydb = new mysqli("localhost","root","","decora");
+
+$order_count = 0;
+if (isset($_SESSION['id'])) {
+    $user_id = $_SESSION['id'];
+    $res = $mydb->query("SELECT COUNT(*) AS total FROM service_requests WHERE user_id=$user_id");
+    $row = $res->fetch_assoc();
+    $order_count = $row['total'];
+}
+?>
+
 <div class="container-fluid sticky-top">
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light border-bottom border-2 border-white">
@@ -49,9 +62,11 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center py-2" href="#">
-                                <i class="bi bi-credit-card me-3 fs-5 text-secondary"></i>
-                                Billing <span class="badge bg-danger ms-auto">4</span>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="project_status.php">
+                                <i class="bi bi-card-list me-3 fs-5 text-secondary"></i>
+                                Project Status <?php if($order_count > 0){ ?>
+                                                    <span class="badge bg-danger ms-auto"><?= $order_count ?></span>
+                                                <?php } ?>
                             </a>
                         </li>
 
@@ -132,9 +147,11 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="#">
-                                    <i class="bi bi-credit-card me-3 fs-5 text-secondary"></i>
-                                    Billing <span class="badge bg-danger ms-auto">4</span>
+                                <a class="dropdown-item d-flex align-items-center py-2" href="project_status.php">
+                                    <i class="bi bi-card-list me-3 fs-5 text-secondary"></i>
+                                    Project Status <?php if($order_count > 0){ ?>
+                                        <span class="badge bg-danger ms-auto"><?= $order_count ?></span>
+                                    <?php } ?>
                                 </a>
                             </li>
 

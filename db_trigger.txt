@@ -1,0 +1,14 @@
+
+//////////////// for request_list and review_list
+
+DELIMITER $$
+
+CREATE TRIGGER before_service_request_delete
+BEFORE DELETE ON service_requests
+FOR EACH ROW
+BEGIN
+    DELETE FROM reviews 
+    WHERE service_request_id = OLD.id;
+END$$
+
+DELIMITER ;

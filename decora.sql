@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2025 at 12:07 AM
+-- Generation Time: Dec 19, 2025 at 11:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -107,6 +107,13 @@ CREATE TABLE `reviews` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `service_request_id`, `rating`, `review_text`, `created_at`) VALUES
+(8, 19, 3, 'x', '2025-12-20 04:49:53');
+
 -- --------------------------------------------------------
 
 --
@@ -149,21 +156,38 @@ CREATE TABLE `service_requests` (
   `describe` text DEFAULT NULL,
   `status` enum('pending','in_progress','completed','cancelled') DEFAULT 'pending',
   `price` decimal(10,2) DEFAULT NULL,
+  `advance_price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `due_price` decimal(10,2) NOT NULL DEFAULT 0.00,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `custom_service` tinyint(1) DEFAULT 0,
-  `custom_service_description` text DEFAULT NULL
+  `custom_service_description` text DEFAULT NULL,
+  `expected_duration` int(11) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `expected_price` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `service_requests`
 --
 
-INSERT INTO `service_requests` (`id`, `user_id`, `service_id`, `professional_id`, `describe`, `status`, `price`, `start_date`, `end_date`, `created_at`, `updated_at`, `custom_service`, `custom_service_description`) VALUES
-(1, 6, 1, NULL, 'want to decorate\r\n', 'pending', 500.00, NULL, NULL, '2025-12-18 04:50:08', '2025-12-18 04:50:08', 0, ''),
-(4, 6, NULL, NULL, 'sdfa', 'pending', 5000.00, NULL, NULL, '2025-12-18 04:56:03', '2025-12-18 04:56:03', 1, 'paint');
+INSERT INTO `service_requests` (`id`, `user_id`, `service_id`, `professional_id`, `describe`, `status`, `price`, `advance_price`, `due_price`, `start_date`, `end_date`, `created_at`, `updated_at`, `custom_service`, `custom_service_description`, `expected_duration`, `duration`, `expected_price`) VALUES
+(17, 3, 1, NULL, 'dddddddd', 'pending', NULL, 0.00, 0.00, NULL, NULL, '2025-12-20 04:39:35', '2025-12-20 04:39:35', 0, '', NULL, NULL, 11111.00),
+(18, 3, 1, NULL, 'juk', 'pending', NULL, 0.00, 0.00, NULL, NULL, '2025-12-20 04:41:42', '2025-12-20 04:41:42', 0, '', NULL, NULL, 44.00),
+(19, 3, 2, NULL, 'hhhhhhhh', 'completed', 220020.00, 500.00, 219520.00, '2025-12-20 04:46:56', '2025-12-20 04:47:41', '2025-12-20 04:43:34', '2025-12-20 04:47:41', 0, '', 5, 0, NULL);
+
+--
+-- Triggers `service_requests`
+--
+DELIMITER $$
+CREATE TRIGGER `before_service_request_delete` BEFORE DELETE ON `service_requests` FOR EACH ROW BEGIN
+    DELETE FROM reviews 
+    WHERE service_request_id = OLD.id;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -195,10 +219,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `first_name`, `last_name`, `email`, `phone`, `address`, `company_or_individual`, `profession`, `birthday`, `password`, `profile_pic`, `role`, `created_at`, `updated_at`, `last_login`) VALUES
-(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '6ad4664ba23eac71b5ef5e826ea0c6cd', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2025-12-17 02:11:34'),
-(4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2025-12-18 04:58:20'),
+(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2025-12-20 04:41:32'),
+(4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2025-12-19 22:08:31'),
 (5, 'OP Boys', NULL, NULL, 'opboys@gmail.com', NULL, NULL, 'individual', NULL, NULL, '21232f297a57a5a743894a0e4a801fc3', NULL, 'Client', '2025-12-17 20:39:49', '2025-12-17 20:39:49', NULL),
-(6, 'imran', '', '', 'imran@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', '', 'Client', '2025-12-17 22:44:23', '2025-12-17 22:44:23', '2025-12-18 04:44:58'),
+(6, 'imran', '', '', 'imran@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', '', 'Client', '2025-12-17 22:44:23', '2025-12-17 22:44:23', '2025-12-20 03:14:15'),
 (7, 'jubayer', '', '', 'jubayer@gmail.com', '01929483542', '', 'individual', 'Interior Designer', '2025-12-01', '21232f297a57a5a743894a0e4a801fc3', 'img/users/bbef2c55cb26ddc56bfde49dc25b33b8.jpg', 'Professionals', '2025-12-17 22:45:45', '2025-12-17 22:45:45', NULL),
 (9, 'rony', '', '', 'rony@gmail.com', '', '', 'individual', 'Marketer', '2025-12-11', 'c3284d0f94606de1fd2af172aba15bf3', 'img/users/b1f4921c60103a40450f3675ee8414ab.jpg', 'Professionals', '2025-12-17 23:06:30', '2025-12-17 23:06:30', NULL);
 
@@ -311,7 +335,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -323,7 +347,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT for table `service_requests`
 --
 ALTER TABLE `service_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user`

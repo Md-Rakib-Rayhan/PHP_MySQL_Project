@@ -131,6 +131,37 @@
                 </li> -->
               </ul>
             </li>
+
+            <!-- Add Requests menu here -->
+            <li class="menu-item <?= ($page == 'request_list.php') ? 'active' : '' ?>">
+              <a href="request_list.php" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                <div data-i18n="Requests">Requests</div>
+              </a>
+            </li>
+            <!-- End Requests menu here -->
+
+
+            <!-- Review Start -->
+            <li class="menu-item <?= ($page == 'review_list.php') ? 'active' : '' ?>">
+              <a href="review_list.php" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-star"></i>
+                <div data-i18n="Reviews">Reviews</div>
+              </a>
+            </li>
+            <!-- Review End -->
+
+
+
+            
+
+
+
+
+
+
+
+
  
             <!-- Components -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>

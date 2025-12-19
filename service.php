@@ -105,7 +105,7 @@ $mydb = new mysqli("localhost","root","","decora");
                             <h3 class="font-weight-medium"><?php echo $service->service_name ;?></h3>
                             <p class="mt-3"><?php echo $service->description ;?></p>
                             <p class="mt-3"><strong>≈ <?php echo $service->avg_price ;?></strong></p>
-                            <a href="javascript:void(0)" class="linking btn btn-success text-white">Contract Now</a>
+                            <a href="contact.php?sid=<?php echo $service->id ;?>" class="linking btn btn-success text-white">Contract Now</a>
                         </div>
                     </div>
                 </div>
