@@ -206,11 +206,11 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
                       </g>
                     </svg>
                   </span>
-                  <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
+                  <span class="app-brand-text demo text-body fw-bolder">Decora</span>
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-2">Welcome to Sneat! 👋</h4>
+              <h4 class="mb-2">Welcome to Decora! 👋</h4>
               <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
 
@@ -264,12 +264,7 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
 
 
 
-              <p class="text-center">
-                <span>New on our platform?</span>
-                <a href="register.php">
-                  <span>Create an account</span>
-                </a>
-              </p>
+             
             </div>
           </div>
           <!-- /Register -->
