@@ -4,7 +4,7 @@ if (!isset($_SESSION["isValidAdmin"])){
     header("Location: login.php");
 }
 
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('../db.php');
 
 // Determine if we are editing or adding
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -133,7 +133,7 @@ if (isset($_POST['submit']) && $action == 'edit' && $id != '') {
 <!-- Delete Account -->
  <?php
  
- if (isset($_POST['del_submit']) && $action == 'edit' && $id != '') {
+ if (isset($_POST['del_submit'])) {
 
     $sql = "DELETE FROM services WHERE id='$id'";
     $mydb->query($sql);
@@ -383,9 +383,9 @@ if (isset($_POST['submit']) && $action == 'edit' && $id != '') {
                               <p class="mb-0">Once you delete the account, there is no going back. Please be certain.</p>
                             </div>
                           </div>
-                          <form id="formAccountDeactivation" method="POST" action="account.php?action=edit&id=<?php echo $id; ?>">
-                            <button type="button" id="deleteAccountButton" class="btn btn-danger deactivate-account">Delete Account</button>
-                            <input type="hidden" name="del_submit" value="1"> <!-- Hidden input for PHP to detect delete submission -->
+                          <form id="formAccountDeactivation" method="POST">
+                            <button type="submit" name="del_submit" id="deleteAccountButton" class="btn btn-danger deactivate-account">Delete Account</button>
+                            <input type="hidden" value="1"> <!-- Hidden input for PHP to detect delete submission -->
                           </form>
                         </div>
                       </div>

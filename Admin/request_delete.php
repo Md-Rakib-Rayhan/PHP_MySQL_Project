@@ -10,7 +10,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 
 $id = intval($_GET['id']);
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('../db.php');
 
 // Delete the request
 $delete = $mydb->query("DELETE FROM service_requests WHERE id = $id");

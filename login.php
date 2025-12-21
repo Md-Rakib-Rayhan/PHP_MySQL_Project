@@ -1,6 +1,6 @@
 <?php
 // Connect to the database
-$mydb = new mysqli("localhost","root","","decora");
+include_once('db.php');
 ?>
 <!DOCTYPE html>
 <html

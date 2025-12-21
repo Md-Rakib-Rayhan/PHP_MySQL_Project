@@ -5,7 +5,7 @@ if (!isset($_SESSION["isValidAdmin"])) {
     exit;
 }
 
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('../db.php');
 ?>
 
 <!DOCTYPE html>

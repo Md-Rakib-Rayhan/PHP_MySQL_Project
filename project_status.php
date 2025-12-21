@@ -1,6 +1,6 @@
 <?php
 session_start();
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('db.php');
 
 // Redirect if not logged in
 if (!isset($_SESSION['id'])) {

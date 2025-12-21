@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2025 at 11:56 PM
+-- Generation Time: Dec 21, 2025 at 08:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,21 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact_requests`
---
-
-CREATE TABLE `contact_requests` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `professional_id` int(11) DEFAULT NULL,
-  `message` text DEFAULT NULL,
-  `contact_date` datetime DEFAULT current_timestamp(),
-  `status` enum('pending','resolved') DEFAULT 'pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `professionals`
 --
 
@@ -53,45 +38,17 @@ CREATE TABLE `professionals` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `professional_services`
+-- Dumping data for table `professionals`
 --
 
-CREATE TABLE `professional_services` (
-  `id` int(11) NOT NULL,
-  `professional_id` int(11) DEFAULT NULL,
-  `service_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `progress_updates`
---
-
-CREATE TABLE `progress_updates` (
-  `id` int(11) NOT NULL,
-  `service_request_id` int(11) DEFAULT NULL,
-  `update_description` text DEFAULT NULL,
-  `update_date` datetime DEFAULT current_timestamp(),
-  `price_update` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reports`
---
-
-CREATE TABLE `reports` (
-  `id` int(11) NOT NULL,
-  `service_request_id` int(11) DEFAULT NULL,
-  `report_text` text DEFAULT NULL,
-  `reported_at` datetime DEFAULT current_timestamp(),
-  `status` enum('pending','resolved','dismissed') DEFAULT 'pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `professionals` (`id`, `user_id`, `name`, `bio`, `experience_years`, `is_verified`, `created_at`, `updated_at`) VALUES
+(1, 9, 'rony', 'I Am Rony i am working in marketing sector for 5 year, i have provide service to many of my client', 5, 1, '2025-12-21 11:53:52', '2025-12-21 11:53:52'),
+(2, 11, 'Alice Green', 'Expert in modern living room designs with 8 years of experience.', 8, 1, '2025-12-21 12:07:19', '2025-12-21 12:07:19'),
+(3, 12, 'Bob White', 'Specializes in sustainable architecture and interior solutions.', 10, 1, '2025-12-21 12:07:19', '2025-12-21 12:07:19'),
+(4, 13, 'Clara Black', 'Creative designer focusing on contemporary home interiors.', 6, 0, '2025-12-21 12:07:19', '2025-12-21 12:07:19'),
+(5, 14, 'Daniel Blue', 'Professional decorator for offices and commercial spaces.', 12, 1, '2025-12-21 12:07:19', '2025-12-21 12:07:19'),
+(6, 15, 'Eva Brown', 'Passionate about luxury interior designs and client satisfaction.', 7, 0, '2025-12-21 12:07:19', '2025-12-21 12:07:19');
 
 -- --------------------------------------------------------
 
@@ -112,7 +69,8 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `service_request_id`, `rating`, `review_text`, `created_at`) VALUES
-(8, 19, 3, 'x', '2025-12-20 04:49:53');
+(8, 19, 3, 'x', '2025-12-20 04:49:53'),
+(9, 18, 4, 'nice service', '2025-12-21 10:40:23');
 
 -- --------------------------------------------------------
 
@@ -175,7 +133,7 @@ CREATE TABLE `service_requests` (
 
 INSERT INTO `service_requests` (`id`, `user_id`, `service_id`, `professional_id`, `describe`, `status`, `price`, `advance_price`, `due_price`, `start_date`, `end_date`, `created_at`, `updated_at`, `custom_service`, `custom_service_description`, `expected_duration`, `duration`, `expected_price`) VALUES
 (17, 3, 1, NULL, 'dddddddd', 'pending', NULL, 0.00, 0.00, NULL, NULL, '2025-12-20 04:39:35', '2025-12-20 04:39:35', 0, '', NULL, NULL, 11111.00),
-(18, 3, 1, NULL, 'juk', 'pending', NULL, 0.00, 0.00, NULL, NULL, '2025-12-20 04:41:42', '2025-12-20 04:41:42', 0, '', NULL, NULL, 44.00),
+(18, 3, 1, NULL, 'juk', 'completed', 44.00, 0.00, 44.00, NULL, '2025-12-21 10:40:09', '2025-12-20 04:41:42', '2025-12-21 10:40:09', 0, '', 0, NULL, NULL),
 (19, 3, 2, NULL, 'hhhhhhhh', 'completed', 220020.00, 500.00, 219520.00, '2025-12-20 04:46:56', '2025-12-20 04:47:41', '2025-12-20 04:43:34', '2025-12-20 04:47:41', 0, '', 5, 0, NULL);
 
 --
@@ -219,24 +177,20 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `first_name`, `last_name`, `email`, `phone`, `address`, `company_or_individual`, `profession`, `birthday`, `password`, `profile_pic`, `role`, `created_at`, `updated_at`, `last_login`) VALUES
-(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2025-12-20 04:41:32'),
+(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2025-12-21 10:27:40'),
 (4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2025-12-19 22:08:31'),
 (5, 'OP Boys', NULL, NULL, 'opboys@gmail.com', NULL, NULL, 'individual', NULL, NULL, '21232f297a57a5a743894a0e4a801fc3', NULL, 'Client', '2025-12-17 20:39:49', '2025-12-17 20:39:49', NULL),
 (6, 'imran', '', '', 'imran@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', '', 'Client', '2025-12-17 22:44:23', '2025-12-17 22:44:23', '2025-12-20 03:14:15'),
-(7, 'jubayer', '', '', 'jubayer@gmail.com', '01929483542', '', 'individual', 'Interior Designer', '2025-12-01', '21232f297a57a5a743894a0e4a801fc3', 'img/users/bbef2c55cb26ddc56bfde49dc25b33b8.jpg', 'Professionals', '2025-12-17 22:45:45', '2025-12-17 22:45:45', NULL),
-(9, 'rony', '', '', 'rony@gmail.com', '', '', 'individual', 'Marketer', '2025-12-11', 'c3284d0f94606de1fd2af172aba15bf3', 'img/users/b1f4921c60103a40450f3675ee8414ab.jpg', 'Professionals', '2025-12-17 23:06:30', '2025-12-17 23:06:30', NULL);
+(9, 'Rony', '', '', 'rony@gmail.com', '', '', 'individual', 'Marketer', '2025-12-11', 'c3284d0f94606de1fd2af172aba15bf3', 'img/users/worker1.webp', 'Professionals', '2025-12-17 23:06:30', '2025-12-17 23:06:30', NULL),
+(11, 'Alice Green', 'Alice', 'Green', 'alice@gmail.com', '01700000001', '', 'individual', 'Interior Designer', '1990-05-15', '21232f297a57a5a743894a0e4a801fc3', 'img/users/worker2.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL),
+(12, 'Bob White', 'Bob', 'White', 'bob@gmail.com', '01700000002', '', 'individual', 'Architect', '1985-08-22', '21232f297a57a5a743894a0e4a801fc3', 'img/users/worker3.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL),
+(13, 'Clara Black', 'Clara', 'Black', 'clara@gmail.com', '01700000003', '', 'individual', 'Designer', '1992-03-10', '21232f297a57a5a743894a0e4a801fc3', 'img/users/worker6.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL),
+(14, 'Daniel Blue', 'Daniel', 'Blue', 'daniel@gmail.com', '01700000004', '', 'individual', 'Decorator', '1988-11-30', '21232f297a57a5a743894a0e4a801fc3', 'img/users/b1f4921c60103a40450f3675ee8414ab.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL),
+(15, 'Eva Brown', 'Eva', 'Brown', 'eva@gmail.com', '01700000005', '', 'individual', 'Interior Designer', '1995-07-05', '21232f297a57a5a743894a0e4a801fc3', 'img/users/bbef2c55cb26ddc56bfde49dc25b33b8.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL);
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `contact_requests`
---
-ALTER TABLE `contact_requests`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `professional_id` (`professional_id`);
 
 --
 -- Indexes for table `professionals`
@@ -244,28 +198,6 @@ ALTER TABLE `contact_requests`
 ALTER TABLE `professionals`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `professional_services`
---
-ALTER TABLE `professional_services`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `professional_id` (`professional_id`),
-  ADD KEY `service_id` (`service_id`);
-
---
--- Indexes for table `progress_updates`
---
-ALTER TABLE `progress_updates`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `service_request_id` (`service_request_id`);
-
---
--- Indexes for table `reports`
---
-ALTER TABLE `reports`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `service_request_id` (`service_request_id`);
 
 --
 -- Indexes for table `reviews`
@@ -302,46 +234,22 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `contact_requests`
---
-ALTER TABLE `contact_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `professionals`
 --
 ALTER TABLE `professionals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `professional_services`
---
-ALTER TABLE `professional_services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `progress_updates`
---
-ALTER TABLE `progress_updates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reports`
---
-ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `service_requests`
@@ -353,43 +261,17 @@ ALTER TABLE `service_requests`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `contact_requests`
---
-ALTER TABLE `contact_requests`
-  ADD CONSTRAINT `contact_requests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `contact_requests_ibfk_2` FOREIGN KEY (`professional_id`) REFERENCES `professionals` (`id`);
-
---
 -- Constraints for table `professionals`
 --
 ALTER TABLE `professionals`
-  ADD CONSTRAINT `professionals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `professional_services`
---
-ALTER TABLE `professional_services`
-  ADD CONSTRAINT `professional_services_ibfk_1` FOREIGN KEY (`professional_id`) REFERENCES `professionals` (`id`),
-  ADD CONSTRAINT `professional_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`);
-
---
--- Constraints for table `progress_updates`
---
-ALTER TABLE `progress_updates`
-  ADD CONSTRAINT `progress_updates_ibfk_1` FOREIGN KEY (`service_request_id`) REFERENCES `service_requests` (`id`);
-
---
--- Constraints for table `reports`
---
-ALTER TABLE `reports`
-  ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`service_request_id`) REFERENCES `service_requests` (`id`);
+  ADD CONSTRAINT `professionals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `reviews`

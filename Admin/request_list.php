@@ -4,7 +4,7 @@ if (!isset($_SESSION["isValidAdmin"])) {
     header("Location: login.php");
 }
 
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('../db.php');
 ?>
 
 <!DOCTYPE html>

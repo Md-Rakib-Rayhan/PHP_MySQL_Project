@@ -4,7 +4,7 @@ if (!isset($_SESSION["isValidAdmin"])){
     header("Location: login.php");
 }
 
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('../db.php');
 
 // Determine if we are editing or adding
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -130,7 +130,7 @@ if (isset($_POST['submit']) && $action == 'edit' && $user_id != '') {
 
 
     $sql = "UPDATE user SET
-        name='$name',
+
         email='$email',
         first_name='$first_name',
         last_name='$last_name',
@@ -282,11 +282,7 @@ if (isset($_POST['submit']) && $action == 'edit' && $user_id != '') {
                         ><i class="bx bx-bell me-1"></i>List of Accounts</a
                       >
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="pages-account-settings-connections.html"
-                        ><i class="bx bx-link-alt me-1"></i> Connections</a
-                      >
-                    </li>
+
                   </ul>
                   <div class="card mb-4">
                     <h5 class="card-header"><?php echo ($action == 'edit') ? 'Profile Details' : 'Add New Member'; ?></h5>
@@ -334,7 +330,7 @@ if (isset($_POST['submit']) && $action == 'edit' && $user_id != '') {
 
                         <div class="row">
                           <div class="mb-3 col-md-6">
-                            <label for="Name" class="form-label">User Name *</label>
+                            <label for="Name" class="form-label">User Name</label>
                             <input
                               class="form-control"
                               type="text"
@@ -342,7 +338,7 @@ if (isset($_POST['submit']) && $action == 'edit' && $user_id != '') {
                               name="name"
                               value="<?php echo ($action == 'edit') ?  $user_data->name : ''; ?>"
                               autofocus
-                              placeholder="rayhan2020"
+                              disabled
                             />
                           </div>
                           <div class="mb-3 col-md-6">
@@ -467,7 +463,15 @@ if (isset($_POST['submit']) && $action == 'edit' && $user_id != '') {
                             <?php echo ($action == 'edit') ? 'Save Changes' : 'Add New Member'; ?>
                           </button>
                           <a href="index.php" class="btn btn-outline-secondary" style=":hover {color:white;}">Cancel</a>
+                        
+                        <?php if ($action == 'edit' && $user_data->role === 'Professionals') { ?>
+                          <a href="professional_profile.php?id=<?php echo $user_id;?>"
+                            class="btn btn-outline-primary ">
+                            Professional Details
+                          </a>
+                        <?php } ?>
                         </div>
+
                       </form>
 
 

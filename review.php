@@ -1,6 +1,6 @@
 <?php
 session_start();
-$mydb = new mysqli("localhost", "root", "", "decora");
+include_once('db.php');
 
 // DB check
 if ($mydb->connect_error) {

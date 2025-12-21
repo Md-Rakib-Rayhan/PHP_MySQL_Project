@@ -6,7 +6,7 @@ if (!isset($_SESSION["isvalid"])){
 ?>
 
 <?php
-$mydb = new mysqli("localhost","root","","decora");
+include_once('db.php');
 $name = $_SESSION['name'];
 ?>
 
