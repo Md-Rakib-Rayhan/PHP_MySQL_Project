@@ -9,6 +9,18 @@ if (isset($_SESSION['id'])) {
     $row = $res->fetch_assoc();
     $order_count = $row['total'];
 }
+
+$cart_count = 0;
+if (isset($_SESSION['id'])) {
+    $uid = $_SESSION['id'];
+    $resCart = $mydb->query("SELECT SUM(quantity) AS total FROM cart WHERE user_id=$uid");
+    if ($resCart) {
+        $cartRow = $resCart->fetch_assoc();
+        $cart_count = $cartRow['total'] ?? 0;
+    }
+}
+
+
 ?>
 
 <div class="container-fluid sticky-top">
@@ -55,6 +67,12 @@ if (isset($_SESSION['id'])) {
                             </a>
                         </li>
 
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center py-2" href="order_tracking.php">
+                                <i class="bi bi-person me-3 fs-5 text-secondary"></i> Track Orders
+                            </a>
+                        </li>
+
 
                         <li>
                             <a class="dropdown-item d-flex align-items-center py-2" href="project_status.php">
@@ -74,6 +92,14 @@ if (isset($_SESSION['id'])) {
                         </li>
                     </ul>
                 <?php } ?>
+                <a href="cart.php" class="nav-item nav-link position-relative">
+                    <i class="bi bi-cart fs-5"></i>
+                    <?php if ($cart_count > 0) { ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <?= $cart_count ?>
+                        </span>
+                    <?php } ?>
+                </a>
             </div>
 
             <!-- MIDDLE: Navigation Menu -->
@@ -81,6 +107,7 @@ if (isset($_SESSION['id'])) {
                 <div class="navbar-nav mx-auto">
                     <a href="index.php" class="nav-item nav-link active">Home</a>
                     <a href="service.php" class="nav-item nav-link">Services</a>
+                    <a href="products.php" class="nav-item nav-link">Products</a>
                     <a href="professionals.php" class="nav-item nav-link">Our Team</a>
                     <a href="about.php" class="nav-item nav-link">About</a>
 
@@ -126,6 +153,11 @@ if (isset($_SESSION['id'])) {
                                 </a>
                             </li>
 
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center py-2" href="order_tracking.php">
+                                    <i class="bi bi-person me-3 fs-5 text-secondary"></i> Track Orders
+                                </a>
+                            </li>
 
                             <li>
                                 <a class="dropdown-item d-flex align-items-center py-2" href="project_status.php">
@@ -147,6 +179,14 @@ if (isset($_SESSION['id'])) {
                         </ul>
                     </div>
                 <?php } ?>
+                <a href="cart.php" class="nav-item nav-link position-relative">
+                    <i class="bi bi-cart fs-5"></i>
+                    <?php if ($cart_count > 0) { ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <?= $cart_count ?>
+                        </span>
+                    <?php } ?>
+                </a>
 
             </div>
 

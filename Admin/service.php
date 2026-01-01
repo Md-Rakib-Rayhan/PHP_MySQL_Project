@@ -457,7 +457,6 @@ if (isset($_POST['submit']) && $action == 'edit' && $id != '') {
     <!-- Page JS -->
     <script src="assets/js/pages-account-settings-account.js"></script>
 
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
   </body>
 </html>

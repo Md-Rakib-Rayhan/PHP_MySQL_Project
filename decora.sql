@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2025 at 08:56 AM
+-- Generation Time: Jan 01, 2026 at 01:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,154 @@ SET time_zone = "+00:00";
 --
 -- Database: `decora`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`, `created_at`) VALUES
+(11, 6, 2, 1, '2025-12-31 23:07:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `address` text NOT NULL,
+  `notes` text DEFAULT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `status` enum('pending','accepted','completed','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `invoice_token` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `full_name`, `phone`, `address`, `notes`, `total_amount`, `payment_method`, `status`, `created_at`, `invoice_token`) VALUES
+(1, 6, 'imran', '142442', 'df', 'sdf', 120.00, 'paypal', 'accepted', '2025-12-31 22:37:11', NULL),
+(2, 4, 'Rayhan', '01524', 'sdf', 'sdfdf', 366000.00, 'card', 'pending', '2025-12-31 22:45:52', NULL),
+(3, 3, 'rakib', '015241', 'sdfa', 'asdfasdf', 190.00, 'card', 'pending', '2025-12-31 23:58:48', NULL),
+(4, 3, 'rakib', '214313', 'sdfds', 'sdfsd', 78120.00, 'card', 'pending', '2026-01-01 00:09:13', NULL),
+(5, 3, 'rakib', '01245', 'asdf', 'sdfsdf', 120.00, 'card', 'pending', '2026-01-01 00:13:29', NULL),
+(6, 3, 'rakib', '01245', 'asdfasdf', 'asdfdf', 40.00, 'paypal', 'pending', '2026-01-01 00:14:42', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
+(1, 1, 2, 1, 120.00),
+(2, 2, 9, 1, 54000.00),
+(3, 2, 10, 2, 125000.00),
+(4, 2, 7, 1, 62000.00),
+(5, 3, 1, 2, 75.00),
+(6, 3, 5, 1, 40.00),
+(7, 4, 2, 1, 120.00),
+(8, 4, 8, 1, 78000.00),
+(9, 5, 2, 1, 120.00),
+(10, 6, 5, 1, 40.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `status` enum('pending','completed','failed') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `order_status` enum('pending','accepted','shipped','delivered','cancelled') DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `user_id`, `total_amount`, `payment_method`, `status`, `created_at`, `order_status`) VALUES
+(2, 6, 120.00, 'paypal', 'completed', '2025-12-31 22:37:11', 'delivered'),
+(3, 4, 366000.00, 'card', 'completed', '2025-12-31 22:45:52', 'pending'),
+(4, 3, 190.00, 'card', 'completed', '2025-12-31 23:58:48', 'pending'),
+(5, 3, 78120.00, 'card', 'completed', '2026-01-01 00:09:13', 'pending'),
+(6, 3, 120.00, 'card', 'completed', '2026-01-01 00:13:29', 'pending'),
+(7, 3, 40.00, 'paypal', 'completed', '2026-01-01 00:14:42', 'pending');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `category` varchar(100) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `image_url` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `product_name`, `description`, `category`, `price`, `image_url`, `created_at`, `updated_at`) VALUES
+(1, 'Modern Pendant Lamp', 'Stylish hanging lamp for living rooms or dining areas', 'Lighting', 75.00, 'img/products/pendant-lamp.jpg', '2025-12-31 21:31:14', '2025-12-31 21:31:14'),
+(2, 'Minimalist Coffee Table', 'Oak wood coffee table with clean lines', 'Furniture', 120.00, 'img/products/coffee-table.jpg', '2025-12-31 21:31:14', '2025-12-31 21:31:14'),
+(3, 'Decorative Wall Mirror', 'Round wall mirror with thin metal frame', 'Decor', 60.00, 'img/products/wall-mirror.jpg', '2025-12-31 21:31:14', '2025-12-31 21:31:14'),
+(4, 'Ergonomic Office Chair', 'Comfortable chair for home office use', 'Furniture', 200.00, 'img/products/office-chair.jpg', '2025-12-31 21:31:14', '2025-12-31 21:31:14'),
+(5, 'Luxury Bath Towels Set', 'Set of 4 premium cotton towels', 'Bathroom', 40.00, 'img/products/towel-set.jpg', '2025-12-31 21:31:14', '2025-12-31 21:31:14'),
+(6, 'Luxury Sofa Set', 'Modern luxury sofa perfect for living room interiors', 'Living Room', 85000.00, 'img/products/sofa.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(7, 'Wooden Dining Table', 'Premium wooden dining table with elegant finish', 'Dining', 62000.00, 'img/products/dining.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(8, 'Modern Bed Design', 'Stylish king size bed with storage', 'Bedroom', 78000.00, 'img/products/bed.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(9, 'Office Workstation', 'Minimal office workstation for productivity', 'Office', 54000.00, 'img/products/office.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(10, 'Modular Kitchen Setup', 'Complete modular kitchen solution', 'Kitchen', 125000.00, 'img/products/kitchen.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(11, 'Ceiling Light Decor', 'Decorative ceiling lighting for modern homes', 'Lighting', 12000.00, 'img/products/light.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(12, 'Wardrobe Interior', 'Custom wardrobe interior design', 'Bedroom', 68000.00, 'img/products/wardrobe.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(13, 'TV Unit Design', 'Modern wall-mounted TV unit', 'Living Room', 45000.00, 'img/products/tvunit.jpg', '2025-12-31 21:37:38', '2025-12-31 21:37:38'),
+(14, 'Robot doll', 'Robot doll, suitable computer desk', 'Doll', 121.00, 'img/products/fdb8cf53200be561ab8582944b49f3b8.jpg', '2026-01-01 03:04:38', '2026-01-01 03:04:59');
 
 -- --------------------------------------------------------
 
@@ -177,10 +325,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `first_name`, `last_name`, `email`, `phone`, `address`, `company_or_individual`, `profession`, `birthday`, `password`, `profile_pic`, `role`, `created_at`, `updated_at`, `last_login`) VALUES
-(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2025-12-21 10:27:40'),
-(4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2025-12-19 22:08:31'),
+(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2026-01-01 05:58:31'),
+(4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2026-01-01 04:41:23'),
 (5, 'OP Boys', NULL, NULL, 'opboys@gmail.com', NULL, NULL, 'individual', NULL, NULL, '21232f297a57a5a743894a0e4a801fc3', NULL, 'Client', '2025-12-17 20:39:49', '2025-12-17 20:39:49', NULL),
-(6, 'imran', '', '', 'imran@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', '', 'Client', '2025-12-17 22:44:23', '2025-12-17 22:44:23', '2025-12-20 03:14:15'),
+(6, 'imran', '', '', 'imran@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', '', 'Client', '2025-12-17 22:44:23', '2025-12-17 22:44:23', '2026-01-01 05:19:41'),
 (9, 'Rony', '', '', 'rony@gmail.com', '', '', 'individual', 'Marketer', '2025-12-11', 'c3284d0f94606de1fd2af172aba15bf3', 'img/users/worker1.webp', 'Professionals', '2025-12-17 23:06:30', '2025-12-17 23:06:30', NULL),
 (11, 'Alice Green', 'Alice', 'Green', 'alice@gmail.com', '01700000001', '', 'individual', 'Interior Designer', '1990-05-15', '21232f297a57a5a743894a0e4a801fc3', 'img/users/worker2.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL),
 (12, 'Bob White', 'Bob', 'White', 'bob@gmail.com', '01700000002', '', 'individual', 'Architect', '1985-08-22', '21232f297a57a5a743894a0e4a801fc3', 'img/users/worker3.jpg', 'Professionals', '2025-12-21 12:07:19', '2025-12-21 12:07:19', NULL),
@@ -191,6 +339,40 @@ INSERT INTO `user` (`id`, `name`, `first_name`, `last_name`, `email`, `phone`, `
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`product_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `professionals`
@@ -234,6 +416,36 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT for table `professionals`
 --
 ALTER TABLE `professionals`
@@ -266,6 +478,13 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `professionals`
