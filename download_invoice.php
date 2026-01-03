@@ -47,7 +47,7 @@ $pdf->Ln(5);
 $pdf->SetFont('Arial','B',12);
 $pdf->Cell(100,8,'Product',1);
 $pdf->Cell(30,8,'Quantity',1,0,'C');
-$pdf->Cell(40,8,'Price (৳)',1,1,'R');
+$pdf->Cell(40,8,'Price (tk)',1,1,'R');
 
 // Table content
 $pdf->SetFont('Arial','',12);
@@ -59,8 +59,8 @@ while($prod = $products_res->fetch_object()){
 
 // Total
 $pdf->SetFont('Arial','B',12);
-$pdf->Cell(130,8,'Total',1);
-$pdf->Cell(40,8,'৳ '.number_format($order->total_amount,2),1,1,'R');
+$pdf->Cell(130,8,'Total (Including Shipping)',1);
+$pdf->Cell(40,8,'tk '.number_format($order->total_amount,2),1,1,'R');
 
 // Footer
 $pdf->Ln(10);

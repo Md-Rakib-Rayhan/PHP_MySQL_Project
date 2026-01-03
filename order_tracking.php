@@ -10,10 +10,7 @@ if(!isset($_SESSION['id'])){
 $user_id = $_SESSION['id'];
 
 // DB connect
-$mydb = new mysqli("localhost", "root", "", "decora");
-if ($mydb->connect_error) {
-    die("Database connection failed");
-}
+include_once('db.php');
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +53,7 @@ if ($mydb->connect_error) {
         <div class="row align-items-center">
             <div class="col-lg-6 text-white">
                 <h1 class="display-1">My Orders</h1>
-                <p class="mt-3">Track your order status and details below.</p>
+                <p class="mt-3 text-dark">Track your order status and details below.</p>
             </div>
         </div>
     </div>
@@ -64,92 +61,94 @@ if ($mydb->connect_error) {
 
 <!-- ORDERS -->
 <div class="container py-5">
-    <h2 class="mb-4">Order History</h2>
+    
+    <h2>Order History</h2>
 
     <?php
-    // Fetch all orders/payments for this user
-    $sql = "SELECT p.id as payment_id, p.total_amount, p.payment_method, p.status as payment_status, 
-                   p.order_status, p.created_at,
-                   o.id as order_id
-            FROM payments p
-            JOIN orders o ON o.user_id = p.user_id
-            WHERE p.user_id = $user_id
-            ORDER BY p.created_at DESC";
+    $sql = "
+    SELECT 
+        o.id AS order_id,
+        o.created_at AS order_created,
+        o.total_amount,
+        o.payment_method,
+        o.status AS order_status,
+        p.status AS payment_status
+    FROM orders o
+    LEFT JOIN payments p 
+        ON p.user_id = o.user_id
+    AND p.total_amount = o.total_amount
+    AND ABS(TIMESTAMPDIFF(SECOND, o.created_at, p.created_at)) <= 3
+    WHERE o.user_id = $user_id
+    ORDER BY o.created_at DESC
+    ";
 
     $result = $mydb->query($sql);
 
     if($result && $result->num_rows > 0):
     ?>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead class="table-primary">
-                    <tr>
-                        <th>#</th>
-                        <th>Order ID</th>
-                        <th>Products</th>
-                        <th>Total Amount</th>
-                        <th>Payment Method</th>
-                        <th>Payment Status</th>
-                        <th>Order Status</th>
-                        <th>Order Date</th>
-                        <th>Invoice</th> <!-- NEW COLUMN -->
-                    </tr>
-                </thead>
-                <tbody>
-                <?php $i=1; while($order = $result->fetch_object()): 
-                    // Fetch products for this order
-                    $products_sql = "SELECT oi.quantity, pr.product_name
-                                    FROM order_items oi
-                                    JOIN products pr ON pr.id = oi.product_id
-                                    WHERE oi.order_id = ".$order->order_id;
-                    $products_res = $mydb->query($products_sql);
-                    $product_list = [];
-                    while($prod = $products_res->fetch_object()){
-                        $product_list[] = htmlspecialchars($prod->product_name)." (x".$prod->quantity.")";
-                    }
-                ?>
-                <tr>
-                    <td><?= $i++ ?></td>
-                    <td>#<?= $order->order_id ?></td>
-                    <td><?= implode(", ", $product_list) ?></td>
-                    <td>৳ <?= number_format($order->total_amount, 2) ?></td>
-                    <td><?= htmlspecialchars($order->payment_method) ?></td>
-                    <td>
-                        <?php if($order->payment_status=='completed'): ?>
-                            <span class="badge bg-success">Completed</span>
-                        <?php else: ?>
-                            <span class="badge bg-warning"><?= ucfirst($order->payment_status) ?></span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php
-                            $status = $order->order_status;
-                            $status_color = "secondary";
-                            if($status=='pending') $status_color="warning";
-                            elseif($status=='accepted') $status_color="info";
-                            elseif($status=='shipped') $status_color="primary";
-                            elseif($status=='delivered') $status_color="success";
-                            elseif($status=='cancelled') $status_color="danger";
-                        ?>
-                        <span class="badge bg-<?= $status_color ?>"><?= ucfirst($status) ?></span>
-                    </td>
-                    <td><?= date("d M Y, h:i A", strtotime($order->created_at)) ?></td>
-                    <td>
-                        <a href="download_invoice.php?order_id=<?= $order->order_id ?>" 
-                        class="btn btn-sm btn-outline-primary">
-                        Download
-                        </a>
-                    </td>
-                </tr>
-                <?php endwhile; ?>
-                </tbody>
 
-            </table>
-        </div>
+    <table class="table table-bordered">
+    <thead class="table-primary">
+    <tr>
+    <th>#</th>
+    <th>Order ID</th>
+    <th>Products</th>
+    <th>Total</th>
+    <th>Payment</th>
+    <th>Payment Status</th>
+    <th>Order Status</th>
+    <th>Date</th>
+    <th>Invoice</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <?php $i=1; while($row = $result->fetch_object()): ?>
+
+    <?php
+    $products = [];
+    $q = $mydb->query("
+        SELECT pr.product_name, oi.quantity
+        FROM order_items oi
+        JOIN products pr ON pr.id = oi.product_id
+        WHERE oi.order_id = $row->order_id
+    ");
+    while($p = $q->fetch_object()){
+        $products[] = $p->product_name." (x".$p->quantity.")";
+    }
+    ?>
+
+    <tr>
+    <td><?= $i++ ?></td>
+    <td>#<?= $row->order_id ?></td>
+    <td><?= implode(", ", $products) ?></td>
+    <td>৳ <?= number_format($row->total_amount,2) ?></td>
+    <td><?= ucfirst($row->payment_method) ?></td>
+    <td>
+    <span class="badge bg-success">
+    <?= ucfirst($row->payment_status ?? 'pending') ?>
+    </span>
+    </td>
+    <td>
+    <span class="badge bg-info"><?= ucfirst($row->order_status) ?></span>
+    </td>
+    <td><?= date("d M Y, h:i A", strtotime($row->order_created)) ?></td>
+    <td>
+    <a href="download_invoice.php?order_id=<?= $row->order_id ?>"
+    class="btn btn-sm btn-outline-primary">Download</a>
+    </td>
+    </tr>
+
+    <?php endwhile; ?>
+
+    </tbody>
+    </table>
+
     <?php else: ?>
-        <div class="alert alert-info text-center">No orders found.</div>
+    <div class="alert alert-info">No orders found.</div>
     <?php endif; ?>
-</div>
+
+    </div>
 
 <?php include("inc/footer.php"); ?>
     <!-- JavaScript Libraries -->

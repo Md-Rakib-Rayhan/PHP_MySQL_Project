@@ -36,3 +36,8 @@ ADD COLUMN `profession` VARCHAR(100) AFTER `company_or_individual`,
 ADD COLUMN `birthday` DATE AFTER `profession`;
 
 SELECT * FROM `user` WHERE 1
+
+
+rayhan2026
+
+Payments4-1-25

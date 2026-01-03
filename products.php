@@ -3,10 +3,7 @@ session_start();
 
 
 // DB connect
-$mydb = new mysqli("localhost", "root", "", "decora");
-if ($mydb->connect_error) {
-    die("Database connection failed");
-}
+include_once('db.php');
 
 /* ===============================
    GET FILTER VALUES
@@ -104,7 +101,7 @@ $result = $mydb->query($sql);
         <div class="row align-items-center">
             <div class="col-lg-6 text-white">
                 <h1 class="display-1">Shop Products</h1>
-                <p class="mt-3">Handpicked interior design products for modern spaces.</p>
+                <p class="mt-3 text-dark">Handpicked interior design products for modern spaces.</p>
             </div>
         </div>
     </div>

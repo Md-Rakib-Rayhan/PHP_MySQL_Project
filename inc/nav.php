@@ -21,6 +21,11 @@ if (isset($_SESSION['id'])) {
 }
 
 
+
+// Get current page name / For Active Link
+$current_page = basename($_SERVER['PHP_SELF']);
+// echo $current_page;
+                
 ?>
 
 <div class="container-fluid sticky-top">
@@ -62,7 +67,7 @@ if (isset($_SESSION['id'])) {
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center py-2" href="profile.php">
+                            <a class="dropdown-item d-flex align-items-center py-2 " href="profile.php">
                                 <i class="bi bi-person me-3 fs-5 text-secondary"></i> My Profile
                             </a>
                         </li>
@@ -105,14 +110,14 @@ if (isset($_SESSION['id'])) {
             <!-- MIDDLE: Navigation Menu -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <a href="index.php" class="nav-item nav-link active">Home</a>
-                    <a href="service.php" class="nav-item nav-link">Services</a>
-                    <a href="products.php" class="nav-item nav-link">Products</a>
-                    <a href="professionals.php" class="nav-item nav-link">Our Team</a>
-                    <a href="about.php" class="nav-item nav-link">About</a>
+                    <a href="index.php" class="nav-item nav-link <?php if($current_page == 'index.php'){ echo 'active'; } ?>">Home</a>
+                    <a href="service.php" class="nav-item nav-link <?php if($current_page == 'service.php'){ echo 'active'; } ?>">Services</a>
+                    <a href="products.php" class="nav-item nav-link <?php if($current_page == 'products.php'){ echo 'active'; } ?>">Products</a>
+                    <a href="professionals.php" class="nav-item nav-link <?php if($current_page == 'professionals.php'){ echo 'active'; } ?>">Our Team</a>
+                    <a href="about.php" class="nav-item nav-link <?php if($current_page == 'about.php'){ echo 'active'; } ?>">About</a>
 
                     
-                    <a href="contact.php" class="nav-item nav-link">Book Appointment</a>
+                    <a href="contact.php" class="nav-item nav-link <?php if($current_page == 'contact.php'){ echo 'active'; } ?>">Book Appointment</a>
                 </div>
             </div>
 
@@ -148,19 +153,19 @@ if (isset($_SESSION['id'])) {
                             <li><hr class="dropdown-divider"></li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="profile.php">
+                                <a class="dropdown-item d-flex align-items-center py-2" <?php if($current_page == 'profile.php'){ echo 'style="background-color: #5ecd7c; color: white;"'; } ?> href="profile.php">
                                     <i class="bi bi-person me-3 fs-5 text-secondary"></i> My Profile
                                 </a>
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="order_tracking.php">
+                                <a class="dropdown-item d-flex align-items-center py-2" <?php if($current_page == 'order_tracking.php'){ echo 'style="background-color: #5ecd7c; color: white;"'; } ?> href="order_tracking.php">
                                     <i class="bi bi-person me-3 fs-5 text-secondary"></i> Track Orders
                                 </a>
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="project_status.php">
+                                <a class="dropdown-item d-flex align-items-center py-2" <?php if($current_page == 'project_status.php'){ echo 'style="background-color: #5ecd7c; color: white;"'; } ?> href="project_status.php">
                                     <i class="bi bi-card-list me-3 fs-5 text-secondary"></i>
                                     Project Status <?php if($order_count > 0){ ?>
                                         <span class="badge bg-danger ms-auto"><?= $order_count ?></span>

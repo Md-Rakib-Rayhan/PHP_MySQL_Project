@@ -1,18 +1,16 @@
 <?php
 session_start();
 
-// Login check
 if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit;
 }
 
-$mydb = new mysqli("localhost", "root", "", "decora");
-if ($mydb->connect_error) die("DB connection failed");
+include_once('db.php');
 
 $user_id = $_SESSION['id'];
 
-/* Fetch Cart Items */
+/* Fetch Cart */
 $result = $mydb->query("
 SELECT c.quantity, p.id AS product_id, p.product_name, p.price
 FROM cart c
@@ -20,57 +18,108 @@ JOIN products p ON c.product_id = p.id
 WHERE c.user_id = $user_id
 ");
 
-if (!isset($_SESSION['order_success'])){
-    if (!$result || $result->num_rows == 0) {
+if (!$result || $result->num_rows == 0) {
     header("Location: cart.php");
     exit;
 }
-}
 
-
-$grandTotal = 0;
 $items = [];
+$subTotal = 0;
+$totalQty = 0;
+
 while ($row = $result->fetch_assoc()) {
     $row['total'] = $row['price'] * $row['quantity'];
-    $grandTotal += $row['total'];
+    $subTotal += $row['total'];
+    $totalQty += $row['quantity'];
     $items[] = $row;
 }
 
+/* Shipping Logic */
+function calculateShipping($division, $qty) {
+    $inside = ['Dhaka','Chattogram'];
+    $base = in_array($division, $inside) ? 300 : 500;
+
+    if ($qty > 6) return $base * 3;
+    if ($qty > 3) return $base * 2;
+    return $base;
+}
+
 /* Place Order */
+// if (isset($_POST['place_order'])) {
+
+//     $division = $mydb->real_escape_string($_POST['division']);
+//     $shippingCharge = calculateShipping($division, $totalQty);
+//     $finalTotal = $subTotal + $shippingCharge;
+//     header("Location: SSL_payment.php?price=$finalTotal");
+
+    // $full_name = $mydb->real_escape_string($_POST['full_name']);
+    // $phone = $mydb->real_escape_string($_POST['phone']);
+    // $address = $mydb->real_escape_string($_POST['address']);
+    // $division = $mydb->real_escape_string($_POST['division']);
+    // $district = $mydb->real_escape_string($_POST['district']);
+    // $notes = $mydb->real_escape_string($_POST['notes']);
+    // $payment_method = $mydb->real_escape_string($_POST['payment_method']);
+
+    // $shippingCharge = calculateShipping($division, $totalQty);
+    // $finalTotal = $subTotal + $shippingCharge;
+
+    // // Order
+    // $mydb->query("
+    //     INSERT INTO orders 
+    //     (user_id, full_name, phone, address, shipping_division, shipping_district, notes, total_amount, shipping_charge, payment_method, status)
+    //     VALUES 
+    //     ('$user_id','$full_name','$phone','$address','$division','$district','$notes','$finalTotal','$shippingCharge','$payment_method','pending')
+    // ");
+
+    // $order_id = $mydb->insert_id;
+
+    // // Order items
+    // foreach ($items as $item) {
+    //     $mydb->query("
+    //         INSERT INTO order_items (order_id, product_id, quantity, price)
+    //         VALUES ('$order_id','{$item['product_id']}','{$item['quantity']}','{$item['price']}')
+    //     ");
+    // }
+
+    // // Payment
+    // $mydb->query("
+    //     INSERT INTO payments (user_id, total_amount, payment_method, status)
+    //     VALUES ('$user_id','$finalTotal','$payment_method','completed')
+    // ");
+
+    // // Clear cart
+    // $mydb->query("DELETE FROM cart WHERE user_id=$user_id");
+
+
+// }
+
 if (isset($_POST['place_order'])) {
-    $full_name = $mydb->real_escape_string($_POST['full_name']);
-    $phone = $mydb->real_escape_string($_POST['phone']);
-    $address = $mydb->real_escape_string($_POST['address']);
-    $notes = $mydb->real_escape_string($_POST['notes']);
-    $payment_method = $mydb->real_escape_string($_POST['payment_method']);
 
-    // 1️⃣ Insert order
-    $mydb->query("INSERT INTO orders (user_id, full_name, phone, address, notes, total_amount, payment_method, status)
-                  VALUES ('$user_id','$full_name','$phone','$address','$notes','$grandTotal','$payment_method','pending')");
-    $order_id = $mydb->insert_id;
+    $_SESSION['pending_order'] = [
+        'full_name' => $_POST['full_name'],
+        'phone' => $_POST['phone'],
+        'address' => $_POST['address'],
+        'division' => $_POST['division'],
+        'district' => $_POST['district'],
+        'notes' => $_POST['notes'],
+        'payment_method' => $_POST['payment_method'],
+        'items' => $items,
+        'subTotal' => $subTotal,
+        'totalQty' => $totalQty
+    ];
 
-    // 2️⃣ Insert order items
-    foreach ($items as $item) {
-        $pid = $item['product_id'];
-        $qty = $item['quantity'];
-        $price = $item['price'];
-        $mydb->query("INSERT INTO order_items (order_id, product_id, quantity, price) 
-                      VALUES ('$order_id','$pid','$qty','$price')");
-    }
+    $shippingCharge = calculateShipping($_POST['division'], $totalQty);
+    $finalTotal = $subTotal + $shippingCharge;
 
-    // 3️⃣ Insert payment record
-    $mydb->query("INSERT INTO payments (user_id, total_amount, payment_method, status) 
-                  VALUES ('$user_id','$grandTotal','$payment_method','completed')");
+    $_SESSION['pending_order']['shipping'] = $shippingCharge;
+    $_SESSION['pending_order']['finalTotal'] = $finalTotal;
 
-    // 4️⃣ Clear cart
-    $mydb->query("DELETE FROM cart WHERE user_id=$user_id");
-
-    $_SESSION['order_success'] = true;
-    header("Location: checkout.php");
+    header("Location: SSL_payment.php?price=$finalTotal");
     exit;
 }
-?>
 
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -112,78 +161,123 @@ if (isset($_POST['place_order'])) {
         <p>Confirm your order details</p>
     </div>
 </div>
-
 <div class="container my-5">
 
-<?php if (isset($_SESSION['order_success'])): ?>
-    <?php unset($_SESSION['order_success']); ?>
-    <div class="alert alert-success text-center">
-        <h4>🎉 Order placed successfully!</h4>
-        <a href="products.php" class="btn btn-dark mt-3">Continue Shopping</a>
-        <a href="order_tracking.php" class="btn btn-dark mt-3">See My Order</a>
+
+
+    <form method="post">
+    <div class="row g-4">
+
+    <div class="col-lg-7">
+    <div class="card"><div class="card-body">
+
+    <input class="form-control mb-3" name="full_name" required placeholder="Full Name">
+    <input class="form-control mb-3" name="phone" required placeholder="Phone">
+    <input class="form-control mb-3" name="address" required placeholder="Address">
+
+    <select class="form-select mb-3" name="division" id="division" required>
+    <option value="">Select Division</option>
+    <option>Dhaka</option>
+    <option>Chattogram</option>
+    <option>Rajshahi</option>
+    <option>Khulna</option>
+    <option>Barishal</option>
+    <option>Sylhet</option>
+    <option>Rangpur</option>
+    <option>Mymensingh</option>
+    </select>
+
+    <select class="form-select mb-3" name="district" id="district" required>
+    <option value="">Select District</option>
+    </select>
+
+    <textarea class="form-control mb-3" name="notes" placeholder="Notes"></textarea>
+
+    <select class="form-select" name="payment_method" required>
+    <option value="">Payment Method</option>
+    <!-- <option value="cod">Cash on Delivery</option> -->
+    <option value="card">Card</option>
+    <option value="paypal">PayPal</option>
+    </select>
+
+    </div></div>
     </div>
-<?php else: ?>
 
-<form method="post">
-<div class="row g-4">
+    <div class="col-lg-5">
+    <div class="card"><div class="card-body">
 
-<!-- LEFT: Billing -->
-<div class="col-lg-7">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h5 class="mb-4">Billing Details</h5>
-
-            <input class="form-control mb-3" name="full_name" required placeholder="Full Name">
-            <input class="form-control mb-3" name="phone" required placeholder="Phone Number">
-            <input class="form-control mb-3" name="address" required placeholder="Address">
-            <textarea class="form-control mb-3" name="notes" rows="3" placeholder="Order notes (optional)"></textarea>
-
-            <h5 class="mb-3 mt-4">Payment Method</h5>
-            <select class="form-select" name="payment_method" required>
-                <option value="">Select a method</option>
-                <option value="card">Card</option>
-                <option value="paypal">PayPal</option>
-                <option value="cod">Cash on Delivery</option>
-            </select>
-        </div>
+    <?php foreach ($items as $i): ?>
+    <div class="d-flex justify-content-between">
+    <span><?= $i['product_name'] ?> × <?= $i['quantity'] ?></span>
+    <strong>৳<?= number_format($i['total'],2) ?></strong>
     </div>
-</div>
+    <?php endforeach; ?>
 
-<!-- RIGHT: Order Summary -->
-<div class="col-lg-5">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h5 class="mb-3">Order Summary</h5>
+    <hr>
 
-            <?php foreach ($items as $item): ?>
-            <div class="d-flex justify-content-between mb-2">
-                <span><?= htmlspecialchars($item['product_name']) ?> × <?= $item['quantity'] ?></span>
-                <strong>৳ <?= number_format($item['total'],2) ?></strong>
-            </div>
-            <?php endforeach; ?>
-
-            <hr>
-
-            <div class="d-flex justify-content-between fs-5 mb-3">
-                <strong>Total</strong>
-                <strong>৳ <?= number_format($grandTotal,2) ?></strong>
-            </div>
-
-            <button type="submit" name="place_order" class="btn btn-dark w-100 mt-4">
-                Place Order
-            </button>
-        </div>
+    <div class="d-flex justify-content-between">
+    <span>Subtotal</span>
+    <strong>৳<?= number_format($subTotal,2) ?></strong>
     </div>
-</div>
 
-</div>
+    <div class="d-flex justify-content-between">
+    <span>Shipping</span>
+    <strong id="shipping">৳0.00</strong>
+    </div>
+
+    <hr>
+
+    <div class="d-flex justify-content-between fs-5">
+    <strong>Total</strong>
+    <strong id="finalTotal">৳<?= number_format($subTotal,2) ?></strong>
+    </div>
+
+    <button class="btn btn-dark w-100 mt-4" name="place_order">Place Order</button>
+
+    </div></div>
+    </div>
+
+    </div>
 </form>
-<?php endif; ?>
 
+<script>
+const districts = {
+Dhaka:["Dhaka","Gazipur","Narayanganj"],
+Chattogram:["Chattogram","Cox's Bazar","Comilla"],
+Rajshahi:["Rajshahi","Bogra"],
+Khulna:["Khulna","Jessore"],
+Barishal:["Barishal","Bhola"],
+Sylhet:["Sylhet","Habiganj"],
+Rangpur:["Rangpur","Dinajpur"],
+Mymensingh:["Mymensingh","Jamalpur"]
+};
+
+const division = document.getElementById('division');
+const district = document.getElementById('district');
+const shippingEl = document.getElementById('shipping');
+const finalEl = document.getElementById('finalTotal');
+
+const subTotal = <?= $subTotal ?>;
+const qty = <?= $totalQty ?>;
+
+division.addEventListener('change', () => {
+district.innerHTML = '<option value="">Select District</option>';
+
+districts[division.value]?.forEach(d=>{
+district.innerHTML += `<option>${d}</option>`;
+});
+
+let base = ['Dhaka','Chattogram'].includes(division.value) ? 300 : 500;
+let mult = qty > 6 ? 3 : qty > 3 ? 2 : 1;
+let ship = base * mult;
+
+shippingEl.innerText = '৳' + ship.toFixed(2);
+finalEl.innerText = '৳' + (subTotal + ship).toFixed(2);
+});
+</script>
 </div>
 
 <?php include("inc/footer.php"); ?>
-
 
 <!-- JS Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -196,10 +290,3 @@ if (isset($_POST['place_order'])) {
 </body>
 </html>
 
-
-
-
-
-
-
-<!-- https://www.youtube.com/watch?v=1KxD8J8CAFg -->

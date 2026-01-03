@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 03, 2026 at 10:52 PM
+-- Generation Time: Jan 01, 2026 at 01:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,11 +54,8 @@ CREATE TABLE `orders` (
   `full_name` varchar(255) NOT NULL,
   `phone` varchar(50) NOT NULL,
   `address` text NOT NULL,
-  `shipping_division` varchar(50) DEFAULT NULL,
-  `shipping_district` varchar(50) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `shipping_charge` decimal(10,2) DEFAULT NULL,
   `payment_method` varchar(50) NOT NULL,
   `status` enum('pending','accepted','completed','cancelled') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -69,16 +66,13 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `full_name`, `phone`, `address`, `shipping_division`, `shipping_district`, `notes`, `total_amount`, `shipping_charge`, `payment_method`, `status`, `created_at`, `invoice_token`) VALUES
-(1, 6, 'imran', '142442', 'df', NULL, NULL, 'sdf', 120.00, NULL, 'paypal', 'accepted', '2025-12-31 22:37:11', NULL),
-(2, 4, 'Rayhan', '01524', 'sdf', NULL, NULL, 'sdfdf', 366000.00, NULL, 'card', 'pending', '2025-12-31 22:45:52', NULL),
-(3, 3, 'rakib', '015241', 'sdfa', NULL, NULL, 'asdfasdf', 190.00, NULL, 'card', 'pending', '2025-12-31 23:58:48', NULL),
-(4, 3, 'rakib', '214313', 'sdfds', NULL, NULL, 'sdfsd', 78120.00, NULL, 'card', 'pending', '2026-01-01 00:09:13', NULL),
-(5, 3, 'rakib', '01245', 'asdf', NULL, NULL, 'sdfsdf', 120.00, NULL, 'card', 'pending', '2026-01-01 00:13:29', NULL),
-(6, 3, 'rakib', '01245', 'asdfasdf', NULL, NULL, 'asdfdf', 40.00, NULL, 'paypal', 'pending', '2026-01-01 00:14:42', NULL),
-(7, 3, 'rakib', '01212', 'adsf', 'Dhaka', 'Dhaka', 'asdf', 420.00, 300.00, 'cod', 'pending', '2026-01-03 20:07:12', NULL),
-(8, 3, 'asdf', '4254', 'adsf', 'Khulna', 'Khulna', 'sdf', 575.00, 500.00, 'paypal', 'pending', '2026-01-03 20:08:35', NULL),
-(9, 3, 'sdfg', 'asdf', 'asdf', 'Chattogram', 'Cox\'s Bazar', 'afds', 420.00, 300.00, 'card', 'pending', '2026-01-03 21:48:31', NULL);
+INSERT INTO `orders` (`id`, `user_id`, `full_name`, `phone`, `address`, `notes`, `total_amount`, `payment_method`, `status`, `created_at`, `invoice_token`) VALUES
+(1, 6, 'imran', '142442', 'df', 'sdf', 120.00, 'paypal', 'accepted', '2025-12-31 22:37:11', NULL),
+(2, 4, 'Rayhan', '01524', 'sdf', 'sdfdf', 366000.00, 'card', 'pending', '2025-12-31 22:45:52', NULL),
+(3, 3, 'rakib', '015241', 'sdfa', 'asdfasdf', 190.00, 'card', 'pending', '2025-12-31 23:58:48', NULL),
+(4, 3, 'rakib', '214313', 'sdfds', 'sdfsd', 78120.00, 'card', 'pending', '2026-01-01 00:09:13', NULL),
+(5, 3, 'rakib', '01245', 'asdf', 'sdfsdf', 120.00, 'card', 'pending', '2026-01-01 00:13:29', NULL),
+(6, 3, 'rakib', '01245', 'asdfasdf', 'asdfdf', 40.00, 'paypal', 'pending', '2026-01-01 00:14:42', NULL);
 
 -- --------------------------------------------------------
 
@@ -108,10 +102,7 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 (7, 4, 2, 1, 120.00),
 (8, 4, 8, 1, 78000.00),
 (9, 5, 2, 1, 120.00),
-(10, 6, 5, 1, 40.00),
-(11, 7, 2, 1, 120.00),
-(12, 8, 1, 1, 75.00),
-(13, 9, 2, 1, 120.00);
+(10, 6, 5, 1, 40.00);
 
 -- --------------------------------------------------------
 
@@ -139,10 +130,7 @@ INSERT INTO `payments` (`id`, `user_id`, `total_amount`, `payment_method`, `stat
 (4, 3, 190.00, 'card', 'completed', '2025-12-31 23:58:48', 'pending'),
 (5, 3, 78120.00, 'card', 'completed', '2026-01-01 00:09:13', 'pending'),
 (6, 3, 120.00, 'card', 'completed', '2026-01-01 00:13:29', 'pending'),
-(7, 3, 40.00, 'paypal', 'completed', '2026-01-01 00:14:42', 'pending'),
-(8, 3, 420.00, 'cod', 'completed', '2026-01-03 20:07:12', 'pending'),
-(9, 3, 575.00, 'paypal', 'completed', '2026-01-03 20:08:35', 'pending'),
-(10, 3, 420.00, 'card', 'completed', '2026-01-03 21:48:31', 'pending');
+(7, 3, 40.00, 'paypal', 'completed', '2026-01-01 00:14:42', 'pending');
 
 -- --------------------------------------------------------
 
@@ -337,8 +325,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `first_name`, `last_name`, `email`, `phone`, `address`, `company_or_individual`, `profession`, `birthday`, `password`, `profile_pic`, `role`, `created_at`, `updated_at`, `last_login`) VALUES
-(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2026-01-04 03:47:59'),
-(4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2026-01-04 02:05:36'),
+(3, 'rakib', 'Rakib', 'Rayhan', 'rakib@gmail.com', '012', '', 'company', 'Developer', '2025-12-03', '21232f297a57a5a743894a0e4a801fc3', 'img/users/CFyJwi3K1awUTKMWg3K6RVRUDEYsPflb.jpg', 'Client', '2025-12-11 00:30:56', '2025-12-11 00:34:51', '2026-01-01 05:58:31'),
+(4, 'rayhan', '', '', 'rayhan@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'img/users/fdb8cf53200be561ab8582944b49f3b8.jpg', 'Admin', '2025-12-17 00:13:45', '2025-12-17 00:13:45', '2026-01-01 04:41:23'),
 (5, 'OP Boys', NULL, NULL, 'opboys@gmail.com', NULL, NULL, 'individual', NULL, NULL, '21232f297a57a5a743894a0e4a801fc3', NULL, 'Client', '2025-12-17 20:39:49', '2025-12-17 20:39:49', NULL),
 (6, 'imran', '', '', 'imran@gmail.com', '', '', 'individual', '', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', '', 'Client', '2025-12-17 22:44:23', '2025-12-17 22:44:23', '2026-01-01 05:19:41'),
 (9, 'Rony', '', '', 'rony@gmail.com', '', '', 'individual', 'Marketer', '2025-12-11', 'c3284d0f94606de1fd2af172aba15bf3', 'img/users/worker1.webp', 'Professionals', '2025-12-17 23:06:30', '2025-12-17 23:06:30', NULL),
@@ -431,25 +419,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `products`
