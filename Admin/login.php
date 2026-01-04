@@ -84,11 +84,11 @@ if(isset($_POST['submit']) && $_POST['email_username']!="" && $_POST['password']
     // Store Login info to client browser / stay login
     session_start();
     $_SESSION["isValidAdmin"] = true;
-    $_SESSION["id"] = $userdata['id'];
-    $_SESSION["name"] = $userdata['name'];
-    $_SESSION["email"] = $userdata['email'];
+    $_SESSION["id_A"] = $userdata['id'];
+    $_SESSION["name_A"] = $userdata['name'];
+    $_SESSION["email_A"] = $userdata['email'];
     if(isset($userdata["profile_pic"])){
-      $_SESSION["pic"] = $userdata["profile_pic"];
+      $_SESSION["pic_A"] = $userdata["profile_pic"];
     }
 
     // Move to Admin Page

@@ -5,6 +5,49 @@ if (!isset($_SESSION["isValidAdmin"])){
 }
 ?>
 
+<?php
+include_once('../db.php'); // adjust path if needed
+
+// Total revenue (completed payments)
+$totalRevenue = $mydb->query("
+    SELECT IFNULL(SUM(total_amount),0) AS total 
+    FROM payments 
+    WHERE status='completed'
+")->fetch_assoc()['total'];
+
+// Total orders
+$totalOrders = $mydb->query("
+    SELECT COUNT(*) AS total 
+    FROM orders
+")->fetch_assoc()['total'];
+
+// Pending orders
+$pendingOrders = $mydb->query("
+    SELECT COUNT(*) AS total 
+    FROM orders 
+    WHERE status='pending'
+")->fetch_assoc()['total'];
+
+// Total users
+$totalUsers = $mydb->query("
+    SELECT COUNT(*) AS total 
+    FROM user
+")->fetch_assoc()['total'];
+
+// Total products
+$totalProducts = $mydb->query("
+    SELECT COUNT(*) AS total 
+    FROM products
+")->fetch_assoc()['total'];
+
+// Total professionals
+$totalProfessionals = $mydb->query("
+    SELECT COUNT(*) AS total 
+    FROM professionals
+")->fetch_assoc()['total'];
+?>
+
+
 <!DOCTYPE html>
 
 <html
@@ -180,7 +223,8 @@ if (!isset($_SESSION["isValidAdmin"])){
                             </div>
                           </div>
                           <span>Sales</span>
-                          <h3 class="card-title text-nowrap mb-1">$4,679</h3>
+                          <!-- <h3 class="card-title text-nowrap mb-1">৳<?= number_format($totalRevenue, 2) ?></h3> -->
+                          <h3 class="card-title text-nowrap mb-1">৳<?= number_format($totalRevenue) ?></h3>
                           <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
                         </div>
                       </div>
@@ -226,8 +270,9 @@ if (!isset($_SESSION["isValidAdmin"])){
                               <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
                             </div>
                             <div class="d-flex flex-column">
-                              <small>2022</small>
-                              <h6 class="mb-0">$32.5k</h6>
+                              <!-- <small>2022</small>
+                              <h6 class="mb-0">$32.5k</h6> -->
+                              Pending Orders: <?= $pendingOrders ?>
                             </div>
                           </div>
                           <div class="d-flex">
@@ -302,7 +347,7 @@ if (!isset($_SESSION["isValidAdmin"])){
                             </div>
                           </div>
                           <span class="fw-semibold d-block mb-1">Transactions</span>
-                          <h3 class="card-title mb-2">$14,857</h3>
+                          <h3 class="card-title mb-2">৳<?= number_format($totalRevenue, 2) ?></h3>
                           <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.14%</small>
                         </div>
                       </div>
@@ -616,9 +661,97 @@ if (!isset($_SESSION["isValidAdmin"])){
                   </div>
                 </div>
                 <!--/ Transactions -->
+                
               </div>
+
+
+                          <!-- last -->
+<?php
+$recentOrders = $mydb->query("
+    SELECT o.id, o.full_name, o.total_amount, o.status, o.created_at
+    FROM orders o
+    ORDER BY o.id DESC
+    LIMIT 5
+");
+?>
+
+<div class="card mt-4 mb-5">
+  <div class="card-header">
+    <h5>Recent Orders</h5>
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while($row = $recentOrders->fetch_assoc()): ?>
+        <tr>
+          <td>#<?= $row['id'] ?></td>
+          <td><?= htmlspecialchars($row['full_name']) ?></td>
+          <td>৳<?= number_format($row['total_amount'],2) ?></td>
+          <td>
+            <span class="badge bg-<?=
+              $row['status']=='completed' ? 'success' :
+              ($row['status']=='pending' ? 'warning' : 'danger')
+            ?>">
+              <?= ucfirst($row['status']) ?>
+            </span>
+          </td>
+          <td><?= date("d M Y", strtotime($row['created_at'])) ?></td>
+        </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+            <!-- Next -->
+
+           
+
+            <?php
+$transactions = $mydb->query("
+    SELECT payment_method, total_amount, created_at
+    FROM payments
+    ORDER BY id DESC
+    LIMIT 5
+");
+?>
+
+<?php while($t = $transactions->fetch_assoc()): ?>
+<li class="d-flex mb-4 pb-1">
+  <div class="avatar flex-shrink-0 me-3">
+    <img src="assets/img/icons/unicons/paypal.png" class="rounded" />
+  </div>
+  <div class="d-flex w-100 justify-content-between">
+    <div>
+      <small class="text-muted"><?= strtoupper($t['payment_method']) ?></small>
+      <h6 class="mb-0">Payment</h6>
+    </div>
+    <div>
+      <h6 class="mb-0">৳<?= number_format($t['total_amount'],2) ?></h6>
+    </div>
+  </div>
+</li>
+<?php endwhile; ?>
+
+            <!-- last -->
             </div>
             <!-- / Content -->
+
+
+
+
+
+
+
 
 <!-- Footer -->
 <?php
